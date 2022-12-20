@@ -1,0 +1,5 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/paidestpxha23/public_html/wp.paidest.com
+    - /bin/cp -r * $DEPLOYPATH
