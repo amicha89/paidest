@@ -466,8 +466,7 @@ class LoginController extends Controller
                     'Content-Type' => 'application/json',
                     'api-key' => $apiKey
                     ])->post($apiURL, $requestArray);
-                    
-                    //return response()->json($response->status());
+
                     if($response->status() != 200 && $request->ajax()){
                         //$redirectback =  redirect()->intended(URL::route('verify-email'));
                         
