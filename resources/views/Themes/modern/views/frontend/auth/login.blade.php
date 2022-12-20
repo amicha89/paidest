@@ -33,6 +33,10 @@
                             <div class="card p-4 rounded-0">
                                 <div>
                                     <h3 class="mb-0 text-left font-weight-bold">@lang('message.login.form-title')</h3>
+                                    <!-- <p class="mt-2 text-14">
+                                        <span>@lang('message.login.no-account') &nbsp; </span>
+                                        <a href="{{url('register')}}" class="text-active">@lang('message.login.sign-up-here')</a>.
+                                    </p> -->
                                 </div>
                                 <br>
                                 <div>
