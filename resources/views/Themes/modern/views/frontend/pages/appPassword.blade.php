@@ -101,6 +101,7 @@
 <script src="{{theme_asset('public/js/jquery.validate.min.js')}}" type="text/javascript"></script>
 
 <script type="text/javascript">
+    // weavr password has creating request
     // Initialise the UI library using your ui_key. Replace ui_key with your own UI key.
     window.OpcUxSecureClient.init('{{$ui_key}}');
 
@@ -143,7 +144,7 @@
                     window.location.href = '/wppaidest/login';
                 },
                 error: function (error) {
-                    console.log(error.status);
+                    console.log(error);
                     location.reload();  
                 }
             });

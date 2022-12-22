@@ -41,6 +41,8 @@ class User extends Authenticatable
         'defaultCountry',
         'carrierCode',
         'email',
+        'rootUser_id',
+        'rootuser_type',
         'password',
         'phrase',
         'status',

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\DataTables\Admin\AppRegistrationDataTable;
 use Illuminate\Http\Request;
-use App\Models\AppReg;
+use App\Models\{AppReg,ApiCredential};
 use App\Http\Helpers\Common;
 use Illuminate\Support\Facades\Http;
 use Session,Config,Validator,DB;
@@ -172,7 +172,10 @@ class AppRegistrationController extends Controller
         $phone = $appData->phone;
         $formattedPhone = $appData->formattedPhone;
         $carrierCode = $appData->carrierCode;
-        // $appData->dob
+        $dob = $appData->dob;
+        $dobDay = date('d', strtotime($dob));
+        $dobMonth = date('m', strtotime($dob));
+        $dobYear = date('Y', strtotime($dob));
         $role = $appData->rule;
         $company_name = $appData->company_name;
         $regisrationNum = $appData->company_number;
@@ -191,8 +194,10 @@ class AppRegistrationController extends Controller
         //$randomId       =   rand(70,5000);
         //$randomEmail = 'smarttech4422+'.$randomId.'@gmail.com';
         $apiUrl = config('weavrapiurl.createCorporate');
-        $profileID = config('weavrapiurl.profileId');
-        $apiKey = config('weavrapiurl.apiKey');
+        $apiCredential = ApiCredential::where('name', 'api_credential')->first();
+        $apiKey = $apiCredential['value']['api_key'];
+        $profileID = $apiCredential['value']['corporates_id'];// profileId is Corporates id
+        
         $requestArray = [
               'profileId' => $profileID,
               'tag' => '00111',
@@ -206,9 +211,9 @@ class AppRegistrationController extends Controller
                 ],
                 'companyPosition' => $role,
                 'dateOfBirth' => [
-                  'year' => 2000,
-                  'month' => 1,
-                  'day' => 1,
+                  'year' => $dobYear,
+                  'month' => $dobMonth,
+                  'day' => $dobDay,
                 ],
               ],
               'company' => [
@@ -243,14 +248,16 @@ class AppRegistrationController extends Controller
         if($response->status() === 200){
 
             $responseData = $response->collect();
-
+            //dd($responseData);
             DB::transaction(function () use($appID,$responseData) {
 
                 $first_name = $responseData['rootUser']['name'];
                 $last_name = $responseData['rootUser']['surname'];
+                $rootUserId = $responseData['rootUser']['id']['id'];
+                $rootUserType = $responseData['rootUser']['id']['type'];
                 $CountryCode = $responseData['rootUser']['mobile']['countryCode'];
                 $phoneNumber = $responseData['rootUser']['mobile']['number'];
-                $formattedPhone = $CountryCode.$phoneNumber;
+                $formattedPhone = "+".$CountryCode.$phoneNumber;
                 $email = $responseData['rootUser']['email'];
                 $sourceOfFunds = $responseData['sourceOfFunds'];
                 $companyIndustry = $responseData['industry'];
@@ -278,6 +285,8 @@ class AppRegistrationController extends Controller
                         'last_name' => $last_name,
                         'formattedPhone' => $formattedPhone,
                         'email' => $email,
+                        'rootUser_id' => $rootUserId,
+                        'rootuser_type' => $rootUserType,
                         'status' => 'Inactive', 
                         'ip_address' => $ipAddress 
                     ]);
@@ -299,7 +308,7 @@ class AppRegistrationController extends Controller
             return redirect(Config::get('adminPrefix').'/app-registrations');
         }else{
             $apiUrlErrorCode = $response->status();
-            $this->helper->one_time_message('danger', 'API Request Error {$apiUrlErrorCode}');
+            $this->helper->one_time_message('danger', "API Request Error $apiUrlErrorCode");
             return redirect()->back();
         }
     }// end function
