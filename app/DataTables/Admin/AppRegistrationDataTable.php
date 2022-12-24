@@ -46,7 +46,7 @@ class AppRegistrationDataTable extends DataTable
      */
     public function query()
     {
-        $query = AppReg::select();
+        $query = AppReg::select()->orderBy('id', 'desc');
         
         return $this->applyScopes($query);
     }

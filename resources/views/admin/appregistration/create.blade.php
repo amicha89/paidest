@@ -255,7 +255,7 @@
 
                                 <div class="box-footer">
                                     <a class="btn btn-theme-danger pull-left" href="{{ url(\Config::get('adminPrefix').'/app-registrations') }}" id="users_cancel">Cancel</a>
-                                    <button type="submit" class="btn btn-theme pull-right" id="users_create"><i class="fa fa-spinner fa-spin" style="display: none;"></i> <span id="users_create_text">Create</span></button>
+                                    <button type="submit" class="btn btn-theme pull-right" id="app_create"><i class="fa fa-spinner fa-spin" style="display: none;"></i> <span id="app_create_text">Create</span></button>
                                 </div>
                             </div>
                         </input>

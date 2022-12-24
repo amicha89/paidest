@@ -109,7 +109,7 @@
         },
     })
 
-    $('#register_form').validate({
+    $('#login_form').validate({
         rules: {
             first_name: {
                 required: true,
@@ -151,12 +151,13 @@
         },
         submitHandler: function(form)
         {
+            
             $("#users_create").attr("disabled", true).click(function (e)
             {
                 e.preventDefault();
             });
             $(".spinner").show();
-            $("#users_create_text").text("{{ __('Signing Up...') }}");
+            $("#users_create_text").text("{{ __('Verifying...') }}");
             form.submit();
         }
     });

@@ -139,7 +139,7 @@
             //console.log(tokens.p);
             var uname = $('#email').val();
             var Formdata = {password:tokens.p, username:uname};
-            console.log(Formdata);
+            $(".spinner").show();
             jQuery.ajax({
                 url: '{{ route("password-store") }}',
                 type: 'POST',
@@ -231,5 +231,5 @@
     $.validator.addMethod("alpha", function(value, element) {
         return this.optional(element) || value == value.match(/^[a-zA-Z\s]+$/);
     });
-</script> -->
+</script> 
 @endsection
