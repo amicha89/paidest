@@ -295,7 +295,7 @@ class AppRegistrationController extends Controller
                     ]);
                 
                 // send email
-                $apiKey = config('weavrapiurl.apiKey');
+                $apiKey = $apiCredential['value']['api_key'];
                 $apiUrlforEmail =config('weavrapiurl.sendVerificationEmail');
                 $reqArrayforEmail = [ 'email' => $email ]; 
                 $sendEmailresponse = Http::withHeaders([
