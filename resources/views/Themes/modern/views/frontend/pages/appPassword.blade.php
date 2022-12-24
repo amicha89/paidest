@@ -146,7 +146,7 @@
                 data: Formdata,
                 success: function (res) {
                     console.log(res.status);
-                    window.location.href = '/wppaidest/login';
+                    window.location.href = SITE_URL+'/login';
                 },
                 error: function (error) {
                     console.log(error);
