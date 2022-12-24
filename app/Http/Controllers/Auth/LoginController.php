@@ -136,23 +136,19 @@ class LoginController extends Controller
                 ])->post($apiURL, $requestArray);
 
             //return $response->status();
-            if($response->status() == 200){
-                //$this->helper->one_time_message('success', __("You are logged in..."));
-                Auth::loginUsingId($checkLoggedInUser->id);
-                if (Auth::check()) {
-                    return redirect('dashboard')->with('login', 'success');
-                }
-                return redirect('/login');
-            }
-            //else{
-            //     $this->helper->one_time_message('danger', __("login request error $response->status()"));
+            // if($response->status() == 200){
+            //     //$this->helper->one_time_message('success', __("You are logged in..."));
+            //     Auth::loginUsingId($checkLoggedInUser->id);
+            //     if (Auth::check()) {
+            //         return redirect('dashboard')->with('login', 'success');
+            //     }
             //     return redirect('/login');
             // }
 
             if($response->status() !== 200){
                 $status = $response->status();
                 $this->helper->one_time_message('danger', __("login request error:  $status"));
-                $this->helper->one_time_message('danger', __("Password is not correct."));
+                //$this->helper->one_time_message('danger', __("Password is not correct."));
                 return redirect('/login');
             }
             //end login request to weavr
@@ -166,13 +162,29 @@ class LoginController extends Controller
             else {
                 
                 //Change request type based on user input
-                $request->merge([
-                    $loginData['type'] => $loginData['value'],
-                ]);
-                $type = $loginData['type'];
-                $data = $request->only($type, 'password');
+                // $request->merge([
+                //     $loginData['type'] => $loginData['value'],
+                // ]);
+                // $type = $loginData['type'];
+                // $data = $request->only($type, 'password');
 
-                if (Auth::attempt($data)) {
+                if ($response->status() == 200) {
+                    Auth::loginUsingId($checkLoggedInUser->id);
+                    $userid = Auth::user()->id;
+                    UserDetail::updateOrCreate([
+                            'user_id' => $userid
+                            ],
+                            [
+                                'country_id' => '226',
+                                'last_login_at' => Carbon::now()->toDateTimeString(),
+                                'last_login_ip' => $request->getClientIp(),
+                        ]);
+                        // if (Auth::check()) {
+                        //     return redirect('dashboard')->with('login', 'success');
+                        // }else{
+
+                        //     return redirect('/login');
+                        // }
                     $preferences = Preference::getAll()->where('field', '!=', 'dflt_lang');
                     if (!empty($preferences)) {
                         foreach ($preferences as $pref)
@@ -190,12 +202,12 @@ class LoginController extends Controller
                     }
 
                     //default_timezone
-                    $default_timezone = User::with(['user_detail:id,user_id,timezone'])->where(['id' => auth()->user()->id])->first(['id'])->user_detail->timezone;
-                    if (!$default_timezone) {
-                        Session::put('dflt_timezone_user', session('dflt_timezone'));
-                    } else {
-                        Session::put('dflt_timezone_user', $default_timezone);
-                    }
+                    // $default_timezone = User::with(['user_detail:id,user_id,timezone'])->where(['id' => auth()->user()->id])->first(['id'])->user_detail->timezone;
+                    // if (!$default_timezone) {
+                    //     Session::put('dflt_timezone_user', session('dflt_timezone'));
+                    // } else {
+                    //     Session::put('dflt_timezone_user', $default_timezone);
+                    // }
 
                     // default_language
                     if (!empty(settings('default_language'))) {
@@ -231,13 +243,22 @@ class LoginController extends Controller
                         $log['ip_address']    = $request->ip();
                         $log['browser_agent'] = $request->header('user-agent');
                         ActivityLog::create($log);
-
+                        //dd(Auth::user()->id);
                         // user_detail - adding last_login_at and last_login_ip
-                        auth()->user()->user_detail()->update([
-                            'last_login_at' => Carbon::now()->toDateTimeString(),
-                            'last_login_ip' => $request->getClientIp(),
-                        ]);
-
+                        // auth()->user()->user_detail()->update([
+                        //     'last_login_at' => Carbon::now()->toDateTimeString(),
+                        //     'last_login_ip' => $request->getClientIp(),
+                        // ]);
+                        // DB::table('user_details')
+                        // ->updateOrInsert(
+                        //     ['user_id' => Auth::user()->id],
+                        //     [
+                        //         'last_login_at' => Carbon::now()->toDateTimeString(),
+                        //         'last_login_ip' => $request->getClientIp(),
+                        //     ]
+                        // );
+                        
+                  
                         DB::commit();
 
                         //2fa

@@ -5,7 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\DataTables\Admin\AppRegistrationDataTable;
 use Illuminate\Http\Request;
-use App\Models\{AppReg,ApiCredential};
+use App\Models\{AppReg,ApiCredential,user};
 use App\Http\Helpers\Common;
 use Illuminate\Support\Facades\Http;
 use Session,Config,Validator,DB;
@@ -15,7 +15,7 @@ class AppRegistrationController extends Controller
 {
     
     protected $helper;
-
+    protected $user;
     public function __construct()
     {
         $this->helper = new Common();
@@ -293,7 +293,15 @@ class AppRegistrationController extends Controller
                         'status' => 'Inactive', 
                         'ip_address' => $ipAddress 
                     ]);
+                // get last inserted user_id
+                $user_id = DB::getPdo()->lastInsertId();
                 
+                // Create user detail
+                 // Create user detail
+                //$this->user->createUserDetail($user_id);
+                // DB::table('user_details')->insert([
+                //     'user_id' => $user_id
+                // ]);
                 // send email
                 $apiCredential = ApiCredential::where('name', 'api_credential')->first();
                 $apiKey = $apiCredential['value']['api_key'];
