@@ -128,7 +128,7 @@
                                         Registration Number
                                     </label>
                                     <div class="col-sm-6">
-                                        <input class="form-control" placeholder="Enter Registration Number" name="company_number" type="text" id="" value="">
+                                        <input class="form-control" placeholder="Enter Registration Number" name="company_number" type="number" id="" value="">
                                         </input>
                                         @if($errors->has('company_number'))
                                             <span class="error">
@@ -242,7 +242,7 @@
                                     </div>
                                 </div>
                                 <!-- Status -->
-                                <div class="form-group">
+                                <!-- <div class="form-group">
                                     <label class="col-sm-3 control-label require" for="status">Status</label>
                                     <div class="col-sm-6">
                                         <select class="select2" name="status" id="status">
@@ -251,7 +251,7 @@
                                             <option value='2'>Rejected</option>
                                         </select>
                                     </div>
-                                </div>
+                                </div> -->
 
                                 <div class="box-footer">
                                     <a class="btn btn-theme-danger pull-left" href="{{ url(\Config::get('adminPrefix').'/app-registrations') }}" id="users_cancel">Cancel</a>

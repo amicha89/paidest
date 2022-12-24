@@ -1,6 +1,11 @@
 @extends('frontend.layouts.app')
 @section('content')
 <!--Start banner Section-->
+<style>
+    #password {
+  padding: 14px 10px;
+}
+</style>
 <section class="bg-image mt-93">
     <div class="bg-dark">
         <div class="container">

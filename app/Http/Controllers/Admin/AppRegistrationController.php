@@ -62,7 +62,8 @@ class AppRegistrationController extends Controller
             'cityState' => $request->cityState,
             'zipCode' => $request->zipCode,
             'ipAddress' => $request->ip(),
-            'status' => $request->status,
+            'status' => '0',
+            'dateTime' => Carbon::now()->toDateTimeString()
         ]);
 
         $this->helper->one_time_message('success', 'Application Created Successfully');
@@ -87,6 +88,7 @@ class AppRegistrationController extends Controller
             'first_name'    =>  'required',
             'last_name'    =>  'required',
             'email'    =>  'required',
+            'phone'    =>  'required',
             'dob'    =>  'required',
             'company_name'    =>  'required',
             'registeredCountry'    =>  'required',
@@ -99,6 +101,7 @@ class AppRegistrationController extends Controller
             'first_name'    =>  'First Name',
             'last_name'    =>  'Last Name',
             'email'    =>  'Valid Email Address',
+            'phone'    =>  'Valid Phone Number',
             'dob'    =>  'Date of Birht',
             'company_name'    =>  'Company Name',
             'company_number'    =>  'Company Number',
@@ -181,7 +184,7 @@ class AppRegistrationController extends Controller
         $regisrationNum = $appData->company_number;
         $company_type = $appData->company_type;
         $companyIndustry = $appData->companyIndustry;
-        $registeredCountry = $appData->registeredCountry;
+        $registeredCountry = strtoupper($appData->registeredCountry);
         $sourceOfFunds = $appData->source_of_funds; 
         $streetAddress = $appData->streetAddress; 
         $city = $appData->cityState; 

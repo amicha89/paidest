@@ -1,5 +1,10 @@
 @extends('frontend.layouts.app')
 @section('content')
+<style>
+    #loginPassword {
+  padding: 14px 10px;
+}
+</style>
 <div class="min-vh-100 mt-93">
       <!--Start banner Section-->
       <section class="bg-image">
@@ -99,7 +104,7 @@
                                         <div class="form-group">
                                             <label for="password">@lang('message.login.password')</label>
                                             <!-- <input type="password" class="form-control" id="password" placeholder="@lang('message.login.password')" name="password"> -->
-                                            <div id="loginPassword" class="form-control"></div><br/>
+                                            <div id="loginPassword" class="form-control" ></div><br/>
                                             @if ($errors->has('password'))
                                                 <span class="error">
                                                     <strong>{{ $errors->first('password') }}</strong>

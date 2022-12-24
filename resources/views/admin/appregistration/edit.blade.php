@@ -100,7 +100,7 @@
                                         Phone
                                     </label>
                                     <div class="col-sm-6">
-                                        <input type="tel" class="form-control" id="appphone" name="phone">
+                                        <input type="tel" class="form-control" id="appphone" name="phone" value="{{ $applications->phone ?? '' }}">
                                         <span id="phone-error"></span>
                                         <span id="tel-error"></span>
                                     </div>

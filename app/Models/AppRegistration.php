@@ -10,7 +10,7 @@ class AppRegistration extends Model
     use HasFactory;
     
     protected $table = 'applications';
-    public $timestamps = false;
+    public $timestamps = true;
     
      protected $fillable = [     
                             'first_name',

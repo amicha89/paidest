@@ -106,8 +106,7 @@ class LoginController extends Controller
 
         // get login type (email, phone, email_or_phone)
         $loginData = $this->getLoginData($loginValue, $request->login_via);
-        $hasdPwd = $request->password;
-        //dd($loginData['value']);
+
         if (!empty($loginData['value'])) {
             //Check User Status
             $checkLoggedInUser = User::where(['email' => $loginData['value']])->first(['id','status','rootUser_id','rootuser_type']);
@@ -138,146 +137,161 @@ class LoginController extends Controller
 
             //return $response->status();
             if($response->status() == 200){
-                $this->helper->one_time_message('success', __("You are logged in..."));
+                //$this->helper->one_time_message('success', __("You are logged in..."));
+                Auth::loginUsingId($checkLoggedInUser->id);
+                if (Auth::check()) {
+                    return redirect('dashboard')->with('login', 'success');
+                }
                 return redirect('/login');
-            }else{
-                $this->helper->one_time_message('danger', __("login request error $response->status()"));
+            }
+            //else{
+            //     $this->helper->one_time_message('danger', __("login request error $response->status()"));
+            //     return redirect('/login');
+            // }
+
+            if($response->status() !== 200){
+                $status = $response->status();
+                $this->helper->one_time_message('danger', __("login request error:  $status"));
+                $this->helper->one_time_message('danger', __("Password is not correct."));
                 return redirect('/login');
             }
             //end login request to weavr
 
             // check user verification Status
-            // $checkUserVerificationStatus = $this->checkUserVerificationStatus($loginData['value']);
-            // if ($checkUserVerificationStatus == true) {
-            //     auth()->logout();
-            //     return redirect('login')->with('status', __('We sent you an activation code.<br>Check your email and click on the link to verify.'));
-            // } else {
-            //     //Change request type based on user input
-            //     $request->merge([
-            //         $loginData['type'] => $loginData['value'],
-            //     ]);
-            //     $type = $loginData['type'];
-            //     $data = $request->only($type, 'password');
+            $checkUserVerificationStatus = $this->checkUserVerificationStatus($loginData['value']);
+            if ($checkUserVerificationStatus == true) {
+                auth()->logout();
+                return redirect('login')->with('status', __('We sent you an activation code.<br>Check your email and click on the link to verify.'));
+            } 
+            else {
+                
+                //Change request type based on user input
+                $request->merge([
+                    $loginData['type'] => $loginData['value'],
+                ]);
+                $type = $loginData['type'];
+                $data = $request->only($type, 'password');
 
-            //     if (Auth::attempt($data)) {
-            //         $preferences = Preference::getAll()->where('field', '!=', 'dflt_lang');
-            //         if (!empty($preferences)) {
-            //             foreach ($preferences as $pref)
-            //             {
-            //                 $pref_arr[$pref->field] = $pref->value;
-            //             }
-            //         }
-            //         if (!empty($preferences)) {
-            //             Session::put($pref_arr);
-            //         }
+                if (Auth::attempt($data)) {
+                    $preferences = Preference::getAll()->where('field', '!=', 'dflt_lang');
+                    if (!empty($preferences)) {
+                        foreach ($preferences as $pref)
+                        {
+                            $pref_arr[$pref->field] = $pref->value;
+                        }
+                    }
+                    if (!empty($preferences)) {
+                        Session::put($pref_arr);
+                    }
 
-            //         // default_currency
-            //         if (!empty(settings('default_currency'))) {
-            //             Session::put('default_currency', settings('default_currency'));
-            //         }
+                    // default_currency
+                    if (!empty(settings('default_currency'))) {
+                        Session::put('default_currency', settings('default_currency'));
+                    }
 
-            //         //default_timezone
-            //         $default_timezone = User::with(['user_detail:id,user_id,timezone'])->where(['id' => auth()->user()->id])->first(['id'])->user_detail->timezone;
-            //         if (!$default_timezone) {
-            //             Session::put('dflt_timezone_user', session('dflt_timezone'));
-            //         } else {
-            //             Session::put('dflt_timezone_user', $default_timezone);
-            //         }
+                    //default_timezone
+                    $default_timezone = User::with(['user_detail:id,user_id,timezone'])->where(['id' => auth()->user()->id])->first(['id'])->user_detail->timezone;
+                    if (!$default_timezone) {
+                        Session::put('dflt_timezone_user', session('dflt_timezone'));
+                    } else {
+                        Session::put('dflt_timezone_user', $default_timezone);
+                    }
 
-            //         // default_language
-            //         if (!empty(settings('default_language'))) {
-            //             Session::put('default_language', settings('default_language'));
-            //         }
+                    // default_language
+                    if (!empty(settings('default_language'))) {
+                        Session::put('default_language', settings('default_language'));
+                    }
 
-            //         // company_name
-            //         if (!empty(settings('name'))) {
-            //             Session::put('name', settings('name'));
-            //         }
+                    // company_name
+                    if (!empty(settings('name'))) {
+                        Session::put('name', settings('name'));
+                    }
 
-            //         // company_logo
-            //         if (!empty(settings('logo'))) {
-            //             Session::put('company_logo', settings('logo'));
-            //         }
+                    // company_logo
+                    if (!empty(settings('logo'))) {
+                        Session::put('company_logo', settings('logo'));
+                    }
 
-            //         try {
-            //             DB::beginTransaction();
+                    try {
+                        DB::beginTransaction();
 
-            //             //check default wallet
-            //             $chkWallet = Wallet::where(['user_id' => Auth::user()->id, 'currency_id' => settings('default_currency')])->first();
-            //             if (empty($chkWallet)) {
-            //                 $wallet              = new Wallet();
-            //                 $wallet->user_id     = Auth::user()->id;
-            //                 $wallet->currency_id = settings('default_currency');
-            //                 $wallet->balance     = 0.00;
-            //                 $wallet->is_default  = 'No';
-            //                 $wallet->save();
-            //             }
-            //             $log                  = [];
-            //             $log['user_id']       = Auth::check() ? Auth::user()->id : null;
-            //             $log['type']          = 'User';
-            //             $log['ip_address']    = $request->ip();
-            //             $log['browser_agent'] = $request->header('user-agent');
-            //             ActivityLog::create($log);
+                        //check default wallet
+                        $chkWallet = Wallet::where(['user_id' => Auth::user()->id, 'currency_id' => settings('default_currency')])->first();
+                        if (empty($chkWallet)) {
+                            $wallet              = new Wallet();
+                            $wallet->user_id     = Auth::user()->id;
+                            $wallet->currency_id = settings('default_currency');
+                            $wallet->balance     = 0.00;
+                            $wallet->is_default  = 'No';
+                            $wallet->save();
+                        }
+                        $log                  = [];
+                        $log['user_id']       = Auth::check() ? Auth::user()->id : null;
+                        $log['type']          = 'User';
+                        $log['ip_address']    = $request->ip();
+                        $log['browser_agent'] = $request->header('user-agent');
+                        ActivityLog::create($log);
 
-            //             // user_detail - adding last_login_at and last_login_ip
-            //             auth()->user()->user_detail()->update([
-            //                 'last_login_at' => Carbon::now()->toDateTimeString(),
-            //                 'last_login_ip' => $request->getClientIp(),
-            //             ]);
+                        // user_detail - adding last_login_at and last_login_ip
+                        auth()->user()->user_detail()->update([
+                            'last_login_at' => Carbon::now()->toDateTimeString(),
+                            'last_login_ip' => $request->getClientIp(),
+                        ]);
 
-            //             DB::commit();
+                        DB::commit();
 
-            //             //2fa
-            //             $two_step_verification = preference('two_step_verification');
-            //             $checkDeviceLog = DeviceLog::where(['user_id' => auth()->user()->id, 'browser_fingerprint' => $request->browser_fingerprint])->first(['browser_fingerprint']);
+                        //2fa
+                        $two_step_verification = preference('two_step_verification');
+                        $checkDeviceLog = DeviceLog::where(['user_id' => auth()->user()->id, 'browser_fingerprint' => $request->browser_fingerprint])->first(['browser_fingerprint']);
 
-            //             Session::put('browser_fingerprint', $request->browser_fingerprint); //putting browser_fingerprint on session to restrict users accessing dashboard
+                        Session::put('browser_fingerprint', $request->browser_fingerprint); //putting browser_fingerprint on session to restrict users accessing dashboard
 
-            //             if (auth()->user()->user_detail->two_step_verification_type != "disabled" && $two_step_verification != "disabled") {
-            //                 if (auth()->user()->user_detail->two_step_verification_type == "google_authenticator") {
-            //                     if (!auth()->user()->user_detail->two_step_verification || empty($checkDeviceLog)) {
-            //                         $google2fa                             = app('pragmarx.google2fa');
-            //                         $registration_data                     = $request->all();
-            //                         $registration_data["google2fa_secret"] = $google2fa->generateSecretKey();
+                        if (auth()->user()->user_detail->two_step_verification_type != "disabled" && $two_step_verification != "disabled") {
+                            if (auth()->user()->user_detail->two_step_verification_type == "google_authenticator") {
+                                if (!auth()->user()->user_detail->two_step_verification || empty($checkDeviceLog)) {
+                                    $google2fa                             = app('pragmarx.google2fa');
+                                    $registration_data                     = $request->all();
+                                    $registration_data["google2fa_secret"] = $google2fa->generateSecretKey();
 
-            //                         $request->session()->flash('registration_data', $registration_data);
+                                    $request->session()->flash('registration_data', $registration_data);
 
-            //                         $QR_Image = $google2fa->getQRCodeInline(
-            //                             config('app.name'),
-            //                             auth()->user()->email,
-            //                             $registration_data['google2fa_secret']
-            //                         );
-            //                         $data = [
-            //                             'QR_Image' => $QR_Image,
-            //                             'secret'   => $registration_data['google2fa_secret'],
-            //                         ];
-            //                         return \Redirect::route('google2fa')->with(['data' => $data]);
-            //                     } else {
-            //                         return redirect('dashboard')->with('login', 'success');
-            //                     }
-            //                 } else {
-            //                     if (!auth()->user()->user_detail->two_step_verification || empty($checkDeviceLog)) {
-            //                         $this->execute2fa();
-            //                         return redirect('2fa');
-            //                     } else {
-            //                         return redirect('dashboard')->with('login', 'success');
-            //                     }
-            //                 }
-            //             } else {
-            //                 return redirect('dashboard')->with('login', 'success');
-            //             }
-            //         } catch (Exception $e) {
-            //             DB::rollBack();
-            //             $this->helper->one_time_message('danger', $e->getMessage());
-            //             return redirect('/login');
-            //         }
-            //     } else {
-            //         $this->helper->one_time_message('danger', __('Unable to login with provided credentials!'));
-            //         return redirect('/login');
-            //     }
-            // }
+                                    $QR_Image = $google2fa->getQRCodeInline(
+                                        config('app.name'),
+                                        auth()->user()->email,
+                                        $registration_data['google2fa_secret']
+                                    );
+                                    $data = [
+                                        'QR_Image' => $QR_Image,
+                                        'secret'   => $registration_data['google2fa_secret'],
+                                    ];
+                                    return \Redirect::route('google2fa')->with(['data' => $data]);
+                                } else {
+                                    return redirect('dashboard')->with('login', 'success');
+                                }
+                            } else {
+                                if (!auth()->user()->user_detail->two_step_verification || empty($checkDeviceLog)) {
+                                    $this->execute2fa();
+                                    return redirect('2fa');
+                                } else {
+                                    return redirect('dashboard')->with('login', 'success');
+                                }
+                            }
+                        } else {
+                            return redirect('dashboard')->with('login', 'success');
+                        }
+                    } catch (Exception $e) {
+                        DB::rollBack();
+                        $this->helper->one_time_message('danger', $e->getMessage());
+                        return redirect('/login');
+                    }
+                } else {
+                    $this->helper->one_time_message('danger', __('Unable to login with provided credentials!'));
+                    
+                    return redirect('/login');
+                }
+            }
         } else {
-            $this->helper->one_time_message('danger', __('Unable to login with provided Email...'));
+            $this->helper->one_time_message('danger', __('Provided Email address not found.Please check again.'));
             return redirect('/login');
         }
     }
@@ -450,7 +464,7 @@ class LoginController extends Controller
 
             if($response->status() === 204){
                 User::where('id', $userID)->update(['email_verification' => '1']);
-                $this->helper->one_time_message('success', __('Your Email has been verified successfully.'));
+                $this->helper->one_time_message('success', __('Your Email has been verified successfully. Please create first time password'));
                 return redirect()->action('Auth\LoginController@createApplicationPassword',['userEmail'=>$userEmail]);
             }else{
                 $errorMsg = $response->status();
