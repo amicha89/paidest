@@ -2,10 +2,10 @@
 @section('title', 'Edit Registration')
 
 @section('head_style')
-    <link rel="stylesheet" type="text/css" href="{{ asset('public/backend/sweetalert/sweetalert.css') }}">
-    <link rel="stylesheet" href="{{ asset('public/backend/bootstrap-toggle/css/bootstrap-toggle.min.css') }}">
-    <!-- intlTelInput -->
-    <link rel="stylesheet" type="text/css" href="{{ asset('public/backend/intl-tel-input-13.0.0/intl-tel-input-13.0.0/build/css/intlTelInput.css')}}">
+    <!-- <link rel="stylesheet" type="text/css" href="{{ asset('public/backend/sweetalert/sweetalert.css') }}">
+    <link rel="stylesheet" href="{{ asset('public/backend/bootstrap-toggle/css/bootstrap-toggle.min.css') }}"> -->
+  <!-- intlTelInput -->
+  <link rel="stylesheet" type="text/css" href="{{ asset('public/backend/intl-tel-input-13.0.0/intl-tel-input-13.0.0/build/css/intlTelInput.css')}}">
 @endsection
 
 @section('page_content')
@@ -37,13 +37,18 @@
                 <div class="box-header with-border">
                     
                 </div>
-                <form action="{{ route('appRegis.update', $applications->id) }}" class="form-horizontal" id="user_form" method="POST">
+                <form action="{{ route('appRegis.update', $applications->id) }}" class="form-horizontal" id="user-edit" method="POST">
                         @csrf
                         @method('POST')
                         <input type="hidden" value="{{ $applications->id }}" name="id" id="id" />
                         <input type="hidden" value="{{ $applications->defaultCountry }}" name="user_defaultCountry" id="user_defaultCountry" />
                         <input type="hidden" value="{{ $applications->carrierCode }}" name="user_carrierCode" id="user_carrierCode" />
                         <input type="hidden" name="formattedPhone" id="formattedPhone">
+
+                        <!-- <input type="hidden" value="{{ $applications->id }}" name="id" id="id" />
+                        <input type="hidden" value="{{ $applications->defaultCountry }}" name="user_defaultCountry" id="user_defaultCountry" />
+                        <input type="hidden" value="{{ $applications->carrierCode }}" name="user_carrierCode" id="user_carrierCode" />
+                        <input type="hidden" name="formattedPhone" id="formattedPhone"> -->
 
                             <div class="box-body">
                                 <div class="form-group">
@@ -96,6 +101,17 @@
                                 </div>
 
                                 <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="inputEmail3">
+                                        Phone
+                                    </label>
+                                    <div class="col-sm-6">
+                                        <input type="tel" class="form-control" id="phone" name="phone">
+                                        <span id="phone-error"></span>
+                                        <span id="tel-error"></span>
+                                    </div>
+                                </div>
+<!-- 
+                                <div class="form-group">
                                     <label class="col-sm-3 control-label" for="phone">
                                         Phone
                                     </label>
@@ -104,7 +120,7 @@
                                         <span id="phone-error"></span>
                                         <span id="tel-error"></span>
                                     </div>
-                                </div>
+                                </div> -->
 
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label" for="dob">
@@ -315,25 +331,21 @@
 <script src="{{ asset('public/dist/js/isValidPhoneNumber.js') }}" type="text/javascript"></script>
 <script type="text/javascript">
     'use strict';
-    var input = document.querySelector("#appphone");
-    window.intlTelInput(input, {
-        initialCountry: "auto",
-        geoIpLookup: function(success, failure) {
-            $.get("https://ipinfo.io", function() {}, "jsonp").always(function(resp) {
-                var countryCode = (resp && resp.country) ? resp.country : "";
-                success(countryCode);
-            });
-        },
-        utilsScript: '{{ url("public/backend/intl-tel-input-13.0.0/intl-tel-input-13.0.0/build/js/utils.js") }}'
-    });
-    // var hasPhoneError = false;
-    // var hasEmailError = false;
-    // var utilsScriptLoadingPath = '{{ url("public/backend/intl-tel-input-13.0.0/intl-tel-input-13.0.0/build/js/utils.js") }}';
-    // var formattedPhoneNumber = '{{ !empty($applications->formattedPhone) ? $applications->formattedPhone : NULL }}';
-    // var carrierCode = '{{ !empty($applications->carrierCode) ? $applications->carrierCode : NULL }}';
-    // var defaultCountry = '{{ !empty($applications->defaultCountry) ? $applications->defaultCountry : NULL }}';
-    // var validPhoneNumberErrorText = '{{ __("Please enter a valid international phone number.") }}';
-    // var updatingText = '{{ __("Updating...") }}';
+    var hasPhoneError = false;
+    var hasEmailError = false;
+    var userNameError = '{{ __("Please enter only alphabet and spaces.") }}';
+    var userNameLengthError = '{{ __("Name length can not be more than 30 characters") }}';
+    var utilsScriptLoadingPath = '{{ url("public/backend/intl-tel-input-13.0.0/intl-tel-input-13.0.0/build/js/utils.js") }}';
+    var formattedPhoneNumber = '{{ !empty($applications->formattedPhone) ? $applications->formattedPhone : NULL }}';
+    var carrierCode = '{{ !empty($users->carrierCode) ? $users->carrierCode : NULL }}';
+    var defaultCountry = '{{ !empty($users->defaultCountry) ? $users->defaultCountry : NULL }}';
+    var validPhoneNumberErrorText = '{{ __("Please enter a valid international phone number.") }}';
+    var inactiveWarning = '{!! __("Warning! User would not be able to login.") !!}';
+    var suspendWarning = '{!! __("Warning! User would not be able to do any transaction.") !!}';
+    var passwordMatchErrorText = '{{ __("Please enter same value as the password field.") }}';
+    var updatingText = '{{ __("Updating...") }}';
+
+
 </script>
 <script src="{{ asset('public/dist/js/admin_custom.min.js') }}" type="text/javascript"></script>
 @endpush

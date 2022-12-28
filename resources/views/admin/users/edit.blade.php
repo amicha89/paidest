@@ -380,6 +380,8 @@
     var suspendWarning = '{!! __("Warning! User would not be able to do any transaction.") !!}';
     var passwordMatchErrorText = '{{ __("Please enter same value as the password field.") }}';
     var updatingText = '{{ __("Updating...") }}';
+
+
 </script>
 <script src="{{ asset('public/dist/js/admin_custom.min.js') }}" type="text/javascript"></script>
 @endpush

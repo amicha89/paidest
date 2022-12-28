@@ -294,7 +294,7 @@ class AppRegistrationController extends Controller
                         'ip_address' => $ipAddress 
                     ]);
                 // get last inserted user_id
-                $user_id = DB::getPdo()->lastInsertId();
+                //$user_id = DB::getPdo()->lastInsertId();
                 
                 // Create user detail
                  // Create user detail
