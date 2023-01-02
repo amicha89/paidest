@@ -6,7 +6,6 @@ use App\Http\Controllers\Users\EmailController;
 use Illuminate\Support\Facades\{Config,
     Session,
     Auth,
-    Http,
     DB
 };
 use App\Http\Controllers\Controller;
@@ -14,7 +13,6 @@ use Illuminate\Http\Request;
 use App\Http\Helpers\Common;
 use App\Models\{DeviceLog,
     EmailTemplate,
-    ApiCredential,
     ActivityLog,
     VerifyUser,
     Preference,
@@ -24,7 +22,7 @@ use App\Models\{DeviceLog,
     User
 };
 use Carbon\Carbon;
-use Exception, URL;
+use Exception;
 use Illuminate\Support\Str;
 
 class LoginController extends Controller
@@ -54,12 +52,7 @@ class LoginController extends Controller
 
     public function authenticate(Request $request)
     {
-        
-       
-        //return $request->all();
         captchaCheck(settings('has_captcha'), 'secret_key');
-        
-        
 
         // validation
         if (($request->has_captcha == 'login' || $request->has_captcha == 'login_and_registration') && $request->login_via == 'email_only') {
@@ -109,82 +102,27 @@ class LoginController extends Controller
 
         if (!empty($loginData['value'])) {
             //Check User Status
-            $checkLoggedInUser = User::where(['email' => $loginData['value']])->first(['id','status','rootUser_id','rootuser_type']);
-            //dd($checkLoggedInUser->id);
-            if ($checkLoggedInUser->status == 'Inactive' || $checkLoggedInUser->status == 'Suspended') {
+            $checkLoggedInUser = User::where(['email' => $loginData['value']])->first(['status']);
+            if ($checkLoggedInUser->status == 'Inactive') {
                 auth()->logout();
-                $this->helper->one_time_message('danger', __("Your account is $checkLoggedInUser->status. Please try again later!"));
+                $this->helper->one_time_message('danger', __('Your account is inactivated. Please try again later!'));
                 return redirect('/login');
             }
-            // login request to weavr
-            $userEmail = $loginData['value'];
-            $rootuserid =  $checkLoggedInUser->rootUser_id;
-            $userType =  $checkLoggedInUser->rootuser_type;
-            $hashPwd = $request->password;
-            $apiURL = 'https://sandbox.weavr.io/multi/login_with_password';
-            $apiKey = ApiCredential::where('name', 'api_credential')->first();
-            $apiKey = $apiKey['value']['api_key'];
-            $requestArray =[
-                "email"=> $userEmail,
-                "password"=> [
-                  "value"=> $hashPwd
-                ]
-            ];
-            $response = Http::withHeaders([
-                'Content-Type' => 'application/json',
-                'api-key' => $apiKey
-                ])->post($apiURL, $requestArray);
-
-            //return $response->status();
-            // if($response->status() == 200){
-            //     //$this->helper->one_time_message('success', __("You are logged in..."));
-            //     Auth::loginUsingId($checkLoggedInUser->id);
-            //     if (Auth::check()) {
-            //         return redirect('dashboard')->with('login', 'success');
-            //     }
-            //     return redirect('/login');
-            // }
-
-            if($response->status() !== 200){
-                $status = $response->status();
-                $this->helper->one_time_message('danger', __("login request error:  $status"));
-                //$this->helper->one_time_message('danger', __("Password is not correct."));
-                return redirect('/login');
-            }
-            //end login request to weavr
 
             // check user verification Status
             $checkUserVerificationStatus = $this->checkUserVerificationStatus($loginData['value']);
             if ($checkUserVerificationStatus == true) {
                 auth()->logout();
                 return redirect('login')->with('status', __('We sent you an activation code.<br>Check your email and click on the link to verify.'));
-            } 
-            else {
-                
+            } else {
                 //Change request type based on user input
-                // $request->merge([
-                //     $loginData['type'] => $loginData['value'],
-                // ]);
-                // $type = $loginData['type'];
-                // $data = $request->only($type, 'password');
+                $request->merge([
+                    $loginData['type'] => $loginData['value'],
+                ]);
+                $type = $loginData['type'];
+                $data = $request->only($type, 'password');
 
-                if ($response->status() == 200) {
-                    Auth::loginUsingId($checkLoggedInUser->id);
-                    $userid = Auth::user()->id;
-                    UserDetail::updateOrCreate([
-                            'user_id' => $userid
-                            ],
-                            [
-                                'country_id' => '226',
-                                'last_login_at' => Carbon::now()->toDateTimeString(),
-                                'last_login_ip' => $request->getClientIp(),
-                        ]);
-                        // if (Auth::check()) {
-                        //     return redirect('dashboard')->with('login', 'success');
-                        // }else{
-
-                        //     return redirect('/login');
-                        // }
+                if (Auth::attempt($data)) {
                     $preferences = Preference::getAll()->where('field', '!=', 'dflt_lang');
                     if (!empty($preferences)) {
                         foreach ($preferences as $pref)
@@ -202,12 +140,12 @@ class LoginController extends Controller
                     }
 
                     //default_timezone
-                    // $default_timezone = User::with(['user_detail:id,user_id,timezone'])->where(['id' => auth()->user()->id])->first(['id'])->user_detail->timezone;
-                    // if (!$default_timezone) {
-                    //     Session::put('dflt_timezone_user', session('dflt_timezone'));
-                    // } else {
-                    //     Session::put('dflt_timezone_user', $default_timezone);
-                    // }
+                    $default_timezone = User::with(['user_detail:id,user_id,timezone'])->where(['id' => auth()->user()->id])->first(['id'])->user_detail->timezone;
+                    if (!$default_timezone) {
+                        Session::put('dflt_timezone_user', session('dflt_timezone'));
+                    } else {
+                        Session::put('dflt_timezone_user', $default_timezone);
+                    }
 
                     // default_language
                     if (!empty(settings('default_language'))) {
@@ -243,22 +181,13 @@ class LoginController extends Controller
                         $log['ip_address']    = $request->ip();
                         $log['browser_agent'] = $request->header('user-agent');
                         ActivityLog::create($log);
-                        //dd(Auth::user()->id);
+
                         // user_detail - adding last_login_at and last_login_ip
-                        // auth()->user()->user_detail()->update([
-                        //     'last_login_at' => Carbon::now()->toDateTimeString(),
-                        //     'last_login_ip' => $request->getClientIp(),
-                        // ]);
-                        // DB::table('user_details')
-                        // ->updateOrInsert(
-                        //     ['user_id' => Auth::user()->id],
-                        //     [
-                        //         'last_login_at' => Carbon::now()->toDateTimeString(),
-                        //         'last_login_ip' => $request->getClientIp(),
-                        //     ]
-                        // );
-                        
-                  
+                        auth()->user()->user_detail()->update([
+                            'last_login_at' => Carbon::now()->toDateTimeString(),
+                            'last_login_ip' => $request->getClientIp(),
+                        ]);
+
                         DB::commit();
 
                         //2fa
@@ -307,12 +236,11 @@ class LoginController extends Controller
                     }
                 } else {
                     $this->helper->one_time_message('danger', __('Unable to login with provided credentials!'));
-                    
                     return redirect('/login');
                 }
             }
         } else {
-            $this->helper->one_time_message('danger', __('Provided Email address not found.Please check again.'));
+            $this->helper->one_time_message('danger', __('Unable to login with provided credentials!'));
             return redirect('/login');
         }
     }
@@ -448,112 +376,6 @@ class LoginController extends Controller
                 $twoStepVerification_msg = str_replace('{soft_name}', settings('name'), $twoStepVerification_msg);
                 $this->email->sendEmail(auth()->user()->email, $twoStepVerification_sub, $twoStepVerification_msg);
             }
-        }
-    }
-    // application email verification 
-    public function getAppEmailVerification(Request $request)
-    {
-        $emailData = $request->query();
-        return view('frontend.pages.appEmailVerify', [ 'emailData'=> $emailData]);
-    }
-
-    public function appEmailconfirmation(Request $request)
-    {
-        $checkEmailVerification = User::where(['email' => $request->email])->first(['id','email','email_verification']);
-        
-        if(empty($checkEmailVerification)){
-            $this->helper->one_time_message('danger', __('Requested Email is not available...'));
-            return back();
-        }elseif($checkEmailVerification->email_verification === 1){
-            $this->helper->one_time_message('success', __('Email has been verified already, Please create first time password...'));
-            return redirect()->action('Auth\LoginController@createApplicationPassword',['userEmail'=>$request->email]);
-        }else{
-            $userID = $checkEmailVerification->id;
-            $userEmail = $checkEmailVerification->email;
-            $requestArray = [
-                'email' => $request->email,
-                'verificationCode'=>$request->nonce, 
-            ];
-
-            $apiKey = ApiCredential::where('name', 'api_credential')->first();
-            $apiKey = $apiKey['value']['api_key'];
-            $apiUrl = config('weavrapiurl.corporateEmailVerify');
-            $response = Http::withHeaders([
-                'Content-Type' => 'application/json',
-                'api-key' => $apiKey
-            ])->post($apiUrl, $requestArray);
-
-            if($response->status() === 204){
-                User::where('id', $userID)->update(['email_verification' => '1']);
-                $this->helper->one_time_message('success', __('Your Email has been verified successfully. Please create first time password'));
-                return redirect()->action('Auth\LoginController@createApplicationPassword',['userEmail'=>$userEmail]);
-            }else{
-                $errorMsg = $response->status();
-                $this->helper->one_time_message('danger', __("$errorMsg"));
-                return back();
-            }
-
-        }
-    }
-
-    public function createApplicationPassword(Request $request)
-    {
-        //$data['title'] = 'Application Password';
-        $userEmail = $request->userEmail;
-        $apiCred = ApiCredential::where('name', 'api_credential')->first();
-        $ui_key = $apiCred['value']['ui_key'];
-        return view('frontend.pages.appPassword', compact('userEmail','ui_key'));
-    }
-
-    public function storeApplicationPassword(Request $request)
-    {
-        $uPass = $request->password;
-        $uEmail = $request->username;
-
-        $checkFirstPassword = USER::where(['email' => $uEmail, 'first_password' => '0'])->first();
-        if(empty($checkFirstPassword)){
-
-            //$redirect = redirect()->intended(URL::route('login'));
-            $error = $this->helper->one_time_message('danger', __('Password has been created already. Please click on forget password'));
-            if ($request->ajax()) {          
-                return response()->json([
-                    'error' => $error
-                ]);
-            }
-            //return $redirect; {{url('forget-password')}}
-            //$this->helper->one_time_message('success', __('Password has been created already. Please click on forget password link'));
-            //return redirect('/login');
-        }else{
-            $requestArray = [
-                "password" => [
-                    "value" => $uPass
-                    ]
-                ];
-                $apiCred = ApiCredential::where('name', 'api_credential')->first();
-                $apiKey = $apiCred['value']['api_key'];
-                $rootUserId = $checkFirstPassword->rootUser_id;
-                $apiURL = "https://sandbox.weavr.io/multi/passwords/$rootUserId/create";
-                $response = Http::withHeaders([
-                    'Content-Type' => 'application/json',
-                    'api-key' => $apiKey
-                    ])->post($apiURL, $requestArray);
-
-                    if($response->status() != 200 && $request->ajax()){
-                        $errorResponse = $response->status();
-                        $error = $this->helper->one_time_message('danger', __($errorResponse));
-                        return response()->json([
-                            'error' => $error
-                        ],$errorResponse);
-                        
-                    }
-                    if($response->status() === 200 && $request->ajax())
-                    {
-                        
-                        USER::where(['email' => $uEmail])->update(['first_password' => '1']);
-                        $alertMsg= $this->helper->one_time_message('success', __('Password has been created successfully. Please login'));
-                        return response()->json(['res' => $alertMsg], $response->status());
-                    }
-
         }
     }
 

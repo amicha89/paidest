@@ -1,10 +1,5 @@
 @extends('frontend.layouts.app')
 @section('content')
-<style>
-    #loginPassword {
-  padding: 14px 10px;
-}
-</style>
 <div class="min-vh-100 mt-93">
       <!--Start banner Section-->
       <section class="bg-image">
@@ -12,7 +7,7 @@
             <div class="container">
                 <div class="row py-5">
                     <div class="col-md-12">
-                        <h2 class="text-white font-weight-bold text-28">@lang('message.login.title')</h2>
+                        <h2 class="text-white font-weight-bold text-28">@lang('message.login.title') </h2>
                     </div>
                 </div>
             </div>
@@ -38,20 +33,17 @@
                             <div class="card p-4 rounded-0">
                                 <div>
                                     <h3 class="mb-0 text-left font-weight-bold">@lang('message.login.form-title')</h3>
-                                    <!-- <p class="mt-2 text-14">
+                                    <p class="mt-2 text-14">
                                         <span>@lang('message.login.no-account') &nbsp; </span>
                                         <a href="{{url('register')}}" class="text-active">@lang('message.login.sign-up-here')</a>.
-                                    </p> -->
+                                    </p>
                                 </div>
                                 <br>
                                 <div>
-                                    <!-- {{ url('authenticate') }} -->
-                                    <form  id="login_form" action="{{ url('authenticate') }}" method="POST">
+                                    <form action="{{ url('authenticate') }}" method="post" id="login_form">
                                             {{ csrf_field() }}
                                         <input type="hidden" name="has_captcha" value="{{ isset($setting['has_captcha']) && ($setting['has_captcha'] == 'login' || $setting['has_captcha'] == 'login_and_registration') ? 'login' : 'Disabled' }}">
-                                        
-                                        <input type="hidden" value="" name="password" id="pwd" />
-                                        
+
                                         <input type="hidden" name="login_via" value="
                                         @if (isset($setting['login_via']) && ($setting['login_via'] == 'email_only'))
                                             {{ "email_only" }}
@@ -103,8 +95,8 @@
 
                                         <div class="form-group">
                                             <label for="password">@lang('message.login.password')</label>
-                                            <!-- <input type="password" class="form-control" id="password" placeholder="@lang('message.login.password')" name="password"> -->
-                                            <div id="loginPassword" class="form-control" ></div><br/>
+                                            <input type="password" class="form-control" id="password" placeholder="@lang('message.login.password')" name="password">
+
                                             @if ($errors->has('password'))
                                                 <span class="error">
                                                     <strong>{{ $errors->first('password') }}</strong>
@@ -131,7 +123,7 @@
                                         <div class="row">
                                           <input class="form-check-input" type="hidden" value="" id="remember_me" name="remember_me">
                                             <div class="col-md-12">
-                                                <button type="button" onclick="onSubmit()" class="btn btn-grad float-left" id="login-btn">
+                                                <button type="submit" class="btn btn-grad float-left" id="login-btn">
                                                     <i class="spinner fa fa-spinner fa-spin" style="display: none;"></i>
                                                     <span id="login-btn-text" style="font-weight: bolder;">
                                                         @lang('message.form.button.login')
@@ -161,64 +153,9 @@
 </div>
 @endsection
 @section('js')
-<script src="https://build.weavr.io/app/secure/static/client.1.js"></script>
+
 <script src="{{ theme_asset('public/js/fpjs2/fpjs2.js') }}" type="text/javascript"></script>
 <script src="{{theme_asset('public/js/jquery.validate.min.js')}}" type="text/javascript"></script>
-
-<script type="text/javascript">
-    // weavr password has creating request
-    // Initialise the UI library using your ui_key. Replace ui_key with your own UI key.
-    window.OpcUxSecureClient.init('s/3EsAP9/isBf/8DzCUADg==');
-
-    // Create an instance of a secure form
-    var form = window.OpcUxSecureClient.form();
-    
-    // Create an instance of a secure Password component that will collect the password
-    var input = form.input(
-        'p', 
-        'password', 
-        {
-        placeholder: 'Password', 
-        maxlength: 20
-        }
-    );
-    // Embed the secure Password component in the HTML element where you want
-    // the Password component to the shown on screen
-    input.mount(document.getElementById('loginPassword'));
-
-    // Define this input so that the 'enter key' would submit the password input
-    input.on('submit', () => {
-    console.log('submit password input')
-    })
-
-    // Define a function that will be executed when the form is submitted by the user
-     function onSubmit() {
-        // Get the tokenised version of the password inputted by your customer
-        form.tokenize(function(tokens) {
-        
-            console.log(tokens.p);
-            document.getElementById("pwd").value = tokens.p;
-            $('#login_form').submit()
-            //var uname = $('#email_only').val();
-            //var Formdata = {password:tokens.p, useremail:uname};
-            //console.log(Formdata);
-            // jQuery.ajax({
-            //     url: '{{ url("authenticate") }}',
-            //     type: 'POST',
-            //     data: Formdata,
-            //     success: function (res) {
-            //         window.location.href = SITE_URL+'/dashboard';
-            //     },
-            //     error: function (error) {
-            //         //console.log(error);
-            //         //location.reload();
-            //         window.location.href = SITE_URL+'/login'
-            //     }
-            // });
-            
-        });
-    }
-</script>
 
 <script type="text/javascript">
     jQuery.extend(jQuery.validator.messages, {

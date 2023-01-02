@@ -384,7 +384,7 @@ Route::group(['middleware' => ['no_auth:users', 'locale']], function ()
     Route::post('/verify-email', 'Auth\LoginController@appEmailconfirmation')->name('verify-email'); // appEmail Confirmation
     Route::get('/create-password','Auth\LoginController@createApplicationPassword'); // create application password
     Route::post('/create-password/store', 'Auth\LoginController@storeApplicationPassword')->name('password-store'); // store application Password
-    // Route::get('register', 'Auth\RegisterController@create');
+    Route::get('register', 'Auth\RegisterController@create');
     Route::post('register/duplicate-phone-number-check', 'Auth\RegisterController@registerDuplicatePhoneNumberCheck');
     Route::post('register/store', 'Auth\RegisterController@store');
     Route::get('/user/verify/{token}', 'Auth\RegisterController@verifyUser');
