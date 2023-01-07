@@ -17,7 +17,7 @@
                     </div>
                     <form action="{{ url(\Config::get('adminPrefix').'/app-registrations/store') }}" class="form-horizontal" id="user_form" method="POST">
                         @csrf
-                        @method('POST');
+                        @method('POST')
                         <input type="hidden" name="defaultCountry" id="defaultCountry" class="form-control">
                         <input type="hidden" name="carrierCode" id="carrierCode" class="form-control">
                         <input type="hidden" name="formattedPhone" id="formattedPhone" class="form-control">

@@ -10,6 +10,12 @@
             <a href="{{ url(\Config::get('adminPrefix').'/app-registrations') }}"><i class="fa fa-book"></i><span>Applications</span></a>
         </li>
     @endif
+    <!-- tatum.io -->
+    @if(Common::has_permission(\Auth::guard('admin')->user()->id, 'view_revenue'))
+        <li <?= isset($menu) && $menu == 'crypto-wallets' ? ' class="active"' : ''?> >
+            <a href="{{ url(\Config::get('adminPrefix').'/crypto-wallets') }}"><i class="fa fa-btc"></i><span>Tatum Wallets</span></a>
+        </li>
+    @endif
     <!--users-->
     @if(Common::has_permission(\Auth::guard('admin')->user()->id, 'view_user') || Common::has_permission(\Auth::guard('admin')->user()->id, 'view_admins'))
         <li <?= (isset($menu) && $menu == 'users') ? ' class="active treeview"' : 'treeview'?> >

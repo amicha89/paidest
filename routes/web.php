@@ -85,6 +85,11 @@ Route::group(['prefix' => Config::get('adminPrefix'), 'namespace' => 'Admin', 'm
     Route::get('app-registrations/create-corporate/{id}', 'AppRegistrationController@createCorporate')->name('create.corporate');
     Route::get('app-registrations/status-rejected/{id}', 'AppRegistrationController@appRegisStatusChange')->name('status.rejected');
     
+    //tatum.io
+    Route::get('crypto-wallets','TatumCryptoWalletController@index');
+    Route::get('crypto-wallets/create','TatumCryptoWalletController@create');
+    Route::post('crypto-wallets/create-bsc','TatumCryptoWalletController@bscWallet');
+
     //Api Credential
     Route::get('settings/api-credentials', 'ApiCredentialController@index');
     Route::post('settings/api-credentials', 'ApiCredentialController@store')->name('apiCred.store');

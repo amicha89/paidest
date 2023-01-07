@@ -159,8 +159,8 @@
                                             <label class="col-sm-4 control-label" for="rule">Company Position</label>
                                             <div class="col-sm-8">
                                                 <select class="select2 form-control" name="rule" id="rule">
-                                                    <option value='AUTHORISED_REPRESENTATIVE' {{ $applications->rule == "AUTHORISED_REPRESENTATIVE" ? 'selected' : '' }}>Authorised Representative</option>
-                                                    <option value='DIRECTOR' {{ $applications->rule == "DIRECTOR" ? 'selected' : '' }}>Company Director</option>
+                                                    <option value='AUTHORISED_REPRESENTATIVE' {{ !empty($applications->rule) == "AUTHORISED_REPRESENTATIVE" ? 'selected' : '' }}>Authorised Representative</option>
+                                                    <option value='DIRECTOR' {{ !empty($applications->rule) == "DIRECTOR" ? 'selected' : '' }}>Company Director</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -183,9 +183,9 @@
                                             <label class="col-sm-4 control-label" for="company_type">Company Type</label>
                                             <div class="col-sm-8">
                                                 <select class="select2 form-control" name="company_type" id="company_type">
-                                                    <option value='SOLE_TRADER' {{ $applications->source_of_funds == "SOLE_TRADER" ? 'selected' : '' }}>Sole Trader</option>
-                                                    <option value='LTD_COMPANY' {{ $applications->source_of_funds == "LTD_COMPANY" ? 'selected' : '' }}>LTD Company</option>
-                                                    <option value='LLP_COMPANY' {{ $applications->source_of_funds == "LLP_COMPANY" ? 'selected' : '' }}>LLP Company</option>
+                                                    <option value='SOLE_TRADER' {{ !empty($applications->source_of_funds) == "SOLE_TRADER" ? 'selected' : '' }}>Sole Trader</option>
+                                                    <option value='LTD_COMPANY' {{ !empty($applications->source_of_funds) == "LTD_COMPANY" ? 'selected' : '' }}>LTD Company</option>
+                                                    <option value='LLP_COMPANY' {{ !empty($applications->source_of_funds) == "LLP_COMPANY" ? 'selected' : '' }}>LLP Company</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -194,15 +194,15 @@
                                             <label class="col-sm-4 control-label" for="companyIndustry">Company Industry</label>
                                             <div class="col-sm-8">
                                                 <select class="select2 form-control" name="companyIndustry" id="companyIndustry">
-                                                    <option value='ACCOUNTING' {{ $applications->source_of_funds == "ACCOUNTING" ? 'selected' : '' }}>ACCOUNTING</option>
-                                                    <option value='AUDIT' {{ $applications->source_of_funds == "AUDIT" ? 'selected' : '' }}>AUDIT</option>
-                                                    <option value='FINANCE' {{ $applications->source_of_funds == "FINANCE" ? 'selected' : '' }}>FINANCE</option>
-                                                    <option value='PUBLIC_SECTOR_ADMINISTRATION' {{ $applications->source_of_funds == "PUBLIC_SECTOR_ADMINISTRATION" ? 'selected' : '' }}>PUBLIC SECTOR ADMINISTRATION</option>
-                                                    <option value='ART_ENTERTAINMENT' {{ $applications->source_of_funds == "ART_ENTERTAINMENT" ? 'selected' : '' }}>ART ENTERTAINMENT</option>
-                                                    <option value='ART_ENTERTAINMENT' {{ $applications->source_of_funds == "ART_ENTERTAINMENT" ? 'selected' : '' }}>AUTO AVIATION</option>
-                                                    <option value='BANKING_LENDING' {{ $applications->source_of_funds == "BANKING_LENDING" ? 'selected' : '' }}>BANKING LENDING</option>
-                                                    <option value='BUSINESS_CONSULTANCY_LEGAL' {{ $applications->source_of_funds == "BUSINESS_CONSULTANCY_LEGAL" ? 'selected' : '' }}>BUSINESS CONSULTANCY LEGAL</option>
-                                                    <option value='CONSTRUCTION_REPAIR' {{ $applications->source_of_funds == "CONSTRUCTION_REPAIR" ? 'selected' : '' }}>CONSTRUCTION REPAIR</option>
+                                                    <option value='ACCOUNTING' {{ !empty($applications->source_of_funds) == "ACCOUNTING" ? 'selected' : '' }}>ACCOUNTING</option>
+                                                    <option value='AUDIT' {{ !empty($applications->source_of_funds) == "AUDIT" ? 'selected' : '' }}>AUDIT</option>
+                                                    <option value='FINANCE' {{ !empty($applications->source_of_funds) == "FINANCE" ? 'selected' : '' }}>FINANCE</option>
+                                                    <option value='PUBLIC_SECTOR_ADMINISTRATION' {{ !empty($applications->source_of_funds) == "PUBLIC_SECTOR_ADMINISTRATION" ? 'selected' : '' }}>PUBLIC SECTOR ADMINISTRATION</option>
+                                                    <option value='ART_ENTERTAINMENT' {{ !empty($applications->source_of_funds) == "ART_ENTERTAINMENT" ? 'selected' : '' }}>ART ENTERTAINMENT</option>
+                                                    <option value='ART_ENTERTAINMENT' {{ !empty($applications->source_of_funds) == "ART_ENTERTAINMENT" ? 'selected' : '' }}>AUTO AVIATION</option>
+                                                    <option value='BANKING_LENDING' {{ !empty($applications->source_of_funds) == "BANKING_LENDING" ? 'selected' : '' }}>BANKING LENDING</option>
+                                                    <option value='BUSINESS_CONSULTANCY_LEGAL' {{ !empty($applications->source_of_funds) == "BUSINESS_CONSULTANCY_LEGAL" ? 'selected' : '' }}>BUSINESS CONSULTANCY LEGAL</option>
+                                                    <option value='CONSTRUCTION_REPAIR' {{ !empty($applications->source_of_funds) == "CONSTRUCTION_REPAIR" ? 'selected' : '' }}>CONSTRUCTION REPAIR</option>
                                                 </select>
                                             </div>
                                         </div>
@@ -226,13 +226,13 @@
                                         <label class="col-sm-4 control-label" for="source_of_funds">Source of Funds</label>
                                         <div class="col-sm-8">
                                             <select class="select2 form-control" name="source_of_funds" id="source_of_funds">
-                                                <option value='LABOUR_CONTRACT' {{ $applications->source_of_funds == "LABOUR_CONTRACT" ? 'selected' : '' }} >LABOUR CONTRACT</option>
-                                                <option value='CIVIL_CONTRACT' {{ $applications->source_of_funds == "CIVIL_CONTRACT" ? 'selected' : '' }}>CIVIL CONTRACT</option>
-                                                <option value='FUNDS_FROM_OTHER_AUXILIARY_SOURCES' {{ $applications->source_of_funds == "FUNDS_FROM_OTHER_AUXILIARY_SOURCES" ? 'selected' : '' }}>FUNDS FROM OTHER AUXILIARY SOURCES</option>
-                                                <option value='RENT' {{ $applications->source_of_funds == "RENT" ? 'selected' : '' }}>RENT</option>
-                                                <option value='FUNDS_FROM_OTHER_AUXILIARY_SOURCES' {{ $applications->source_of_funds == "FUNDS_FROM_OTHER_AUXILIARY_SOURCES" ? 'selected' : '' }}>FUNDS FROM OTHER AUXILIARY SOURCES</option>
-                                                <option value='SALE_OF_MOVABLE_ASSETS' {{ $applications->source_of_funds == "SALE_OF_MOVABLE_ASSETS" ? 'selected' : '' }}>SALE OF MOVABLE ASSETS</option>
-                                                <option value='SALE_OF_REAL_ESTATE' {{ $applications->source_of_funds == "SALE_OF_REAL_ESTATE" ? 'selected' : '' }}>SALE OF REAL ESTATE</option>
+                                                <option value='LABOUR_CONTRACT' {{ !empty($applications->source_of_funds) == "LABOUR_CONTRACT" ? 'selected' : '' }} >LABOUR CONTRACT</option>
+                                                <option value='CIVIL_CONTRACT' {{ !empty($applications->source_of_funds) == "CIVIL_CONTRACT" ? 'selected' : '' }}>CIVIL CONTRACT</option>
+                                                <option value='FUNDS_FROM_OTHER_AUXILIARY_SOURCES' {{ !empty($applications->source_of_funds) == "FUNDS_FROM_OTHER_AUXILIARY_SOURCES" ? 'selected' : '' }}>FUNDS FROM OTHER AUXILIARY SOURCES</option>
+                                                <option value='RENT' {{ !empty($applications->source_of_funds) == "RENT" ? 'selected' : '' }}>RENT</option>
+                                                <option value='FUNDS_FROM_OTHER_AUXILIARY_SOURCES' {{ !empty($applications->source_of_funds) == "FUNDS_FROM_OTHER_AUXILIARY_SOURCES" ? 'selected' : '' }}>FUNDS FROM OTHER AUXILIARY SOURCES</option>
+                                                <option value='SALE_OF_MOVABLE_ASSETS' {{ !empty($applications->source_of_funds) == "SALE_OF_MOVABLE_ASSETS" ? 'selected' : '' }}>SALE OF MOVABLE ASSETS</option>
+                                                <option value='SALE_OF_REAL_ESTATE' {{ !empty($applications->source_of_funds) == "SALE_OF_REAL_ESTATE" ? 'selected' : '' }}>SALE OF REAL ESTATE</option>
                                             </select>
                                         </div>
                                         </div>
@@ -286,9 +286,9 @@
                                             <label class="col-sm-4 control-label" for="status">Company Status</label>
                                             <div class="col-sm-8">
                                                 <select class="select2 form-control" name="status" id="status">
-                                                    <option value='0' {{ $applications->status == '0' ? 'selected' : '' }}>Pending</option>
-                                                    <option value='1' {{ $applications->status == '1' ? 'selected' : '' }}>Processing</option>
-                                                    <option value='2' {{ $applications->status == '2' ? 'selected' : '' }}>Rejected</option>
+                                                    <option value='0' {{ !empty($applications->status) == '0' ? 'selected' : '' }}>Pending</option>
+                                                    <option value='1' {{ !empty($applications->status) == '1' ? 'selected' : '' }}>Processing</option>
+                                                    <option value='2' {{ !empty($applications->status) == '2' ? 'selected' : '' }}>Rejected</option>
                                                 </select>
                                             </div>
                                         </div>
