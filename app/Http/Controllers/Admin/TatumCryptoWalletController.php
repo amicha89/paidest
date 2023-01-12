@@ -110,4 +110,14 @@ class TatumCryptoWalletController extends Controller
         }
         
     }
+    //bsc virtual account
+    public function bscvirtualAccounts()
+    {
+        return view('admin.tatumWallets.bscVirtualAcount');
+    }
+    public function createBscvirtualAc()
+    {
+        $errorMsg = $this->helper->one_time_message('danger', 'Virtual Account Error: 401');
+        return back()->with($errorMsg);
+    }
 }

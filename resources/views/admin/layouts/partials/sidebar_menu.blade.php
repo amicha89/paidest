@@ -7,7 +7,7 @@
      <!-- registration -->
     @if(Common::has_permission(\Auth::guard('admin')->user()->id, 'view_revenue'))
         <li <?= isset($menu) && $menu == 'app-registrations' ? ' class="active"' : ''?> >
-            <a href="{{ url(\Config::get('adminPrefix').'/app-registrations') }}"><i class="fa fa-book"></i><span>Applications</span></a>
+            <!-- <a href="{{ url(\Config::get('adminPrefix').'/app-registrations') }}"><i class="fa fa-book"></i><span>Applications</span></a> -->
         </li>
     @endif
     <!-- tatum.io -->

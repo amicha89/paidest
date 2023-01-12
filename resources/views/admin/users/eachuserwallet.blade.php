@@ -9,6 +9,7 @@
 @endsection
 
 @section('page_content')
+
     <div class="box">
        <div class="panel-body ml-20">
             <ul class="nav nav-tabs cus" role="tablist">
@@ -45,7 +46,22 @@
     @elseif ($users->status == 'Active')
         <h3>{{ $users->first_name.' '.$users->last_name }}&nbsp;<span class="label label-success">Active</span></h3>
     @endif
+    <div class="box box-default">
+        <div class="box-body">
+            <div class="d-flex justify-content-between">
+                <!-- <div>
+                    <div class="top-bar-title padding-bottom pull-left">Tatum.io Wallets</div>
+                </div> -->
 
+                <div>
+                <!-- {{url(\Config::get('adminPrefix').'/users/create')}} -->
+                    @if(Common::has_permission(\Auth::guard('admin')->user()->id, 'add_user'))
+                        <a href="{{url(\Config::get('adminPrefix').'/virtual-accounts')}} " class="btn btn-theme"><span class="fa fa-plus"> &nbsp;</span>Create Virtual Account</a>
+                    @endif
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="box">
       <div class="box-body">
         <div class="row">
