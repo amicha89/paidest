@@ -11,7 +11,7 @@
 <div class="row">
         <div class="col-md-12">
             <div class="box box-info" id="user-create">
-                    <div class="box-header with-border">
+                    <div class="box-header with-border ">
                       <h3 class="box-title">Create BSC Virtual Account</h3>
                     </div>
                     <form action="{{ url(\Config::get('adminPrefix').'/virtual-accounts/create-virtual-account') }}" class="form-horizontal" id="user_form" method="POST">
@@ -41,8 +41,12 @@
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label require" for="company_type">Currency</label>
                                     <div class="col-sm-6">
-                                        <select class="select2 form-control" name="company_type" id="company_type">
-                                            <option value='BNB'>BNB</option>
+                                        <select class="select2 form-control" name="currency_type" id="company_type">
+                                            <option value='BSC'>BSC</option>
+                                            <option value='ETH'>ETH</option>
+                                            <option value='TRON'>TRON</option>
+                                            <option value='CELO'>CELO</option>
+                                            <option value='XDC'>XDC</option>
                                             <!-- <option value='LTD_COMPANY'>LTD Company</option>
                                             <option value='LLP_COMPANY'>LLP Company</option> -->
                                         </select>

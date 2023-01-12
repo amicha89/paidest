@@ -48,7 +48,7 @@
     @endif
     <div class="box box-default">
         <div class="box-body">
-            <div class="d-flex justify-content-between">
+            <div class="d-flex justify-content-between pull-right">
                 <!-- <div>
                     <div class="top-bar-title padding-bottom pull-left">Tatum.io Wallets</div>
                 </div> -->
