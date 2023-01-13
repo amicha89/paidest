@@ -17,6 +17,7 @@
                     <form action="{{ url(\Config::get('adminPrefix').'/virtual-accounts/create-virtual-account') }}" class="form-horizontal" id="user_form" method="POST">
                         @csrf
                         @method('POST')
+                        <input type="hidden" name="user_id" id="defaultCountry" value="{{$user_id}}" class="form-control">
                             <div class="box-body">
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label require" for="company_type">Block Chain</label>

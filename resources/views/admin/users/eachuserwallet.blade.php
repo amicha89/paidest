@@ -56,7 +56,7 @@
                 <div>
                 <!-- {{url(\Config::get('adminPrefix').'/users/create')}} -->
                     @if(Common::has_permission(\Auth::guard('admin')->user()->id, 'add_user'))
-                        <a href="{{url(\Config::get('adminPrefix').'/virtual-accounts')}} " class="btn btn-theme"><span class="fa fa-plus"> &nbsp;</span>Create Virtual Account</a>
+                        <a href="{{url(\Config::get('adminPrefix')."/virtual-accounts/$users->id")}} " class="btn btn-theme"><span class="fa fa-plus"> &nbsp;</span>Create Virtual Account</a>
                     @endif
                 </div>
             </div>

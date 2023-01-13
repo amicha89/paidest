@@ -89,7 +89,7 @@ Route::group(['prefix' => Config::get('adminPrefix'), 'namespace' => 'Admin', 'm
     Route::get('crypto-wallets','TatumCryptoWalletController@index');
     Route::get('crypto-wallets/create','TatumCryptoWalletController@create');
     Route::post('crypto-wallets/create-bsc','TatumCryptoWalletController@bscWallet');
-    Route::get('virtual-accounts','TatumCryptoWalletController@bscvirtualAccounts');
+    Route::get('virtual-accounts/{id}','TatumCryptoWalletController@bscvirtualAccounts');
     Route::post('virtual-accounts/create-virtual-account','TatumCryptoWalletController@createBscvirtualAc');
     //Route::get('virtual-accounts/accounts-list','TatumCryptoWalletController@virtualAccountList');
 

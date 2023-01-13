@@ -15,6 +15,7 @@ use DB,Config,Session;
 class TatumCryptoWalletController extends Controller
 {
     protected $helper;
+    protected $user;
     public function __construct()
     {
         $this->helper = new Common();
@@ -113,14 +114,13 @@ class TatumCryptoWalletController extends Controller
         
     }
     //bsc virtual account
-    public function bscvirtualAccounts()
+    public function bscvirtualAccounts($id)
     {
-        return view('admin.tatumWallets.bscVirtualAcount');
+        return view('admin.tatumWallets.bscVirtualAcount')->with('user_id', $id);
     }
     public function createBscvirtualAc(Request $request)
     {
-        $loggedUserId = Session::get('logged_userID');
-        dd($loggedUserId);
+        //dd($request->all());
         $currency_type = $request->currency_type;
         $bsc_xpub = DB::table('tatum_bsc_wallet')->select('xpub')->first();
         $bsc_xpub = $bsc_xpub->xpub;
@@ -153,9 +153,9 @@ class TatumCryptoWalletController extends Controller
         $xpub = $virtualAcc_respone["xpub"]; 
         $accountingCurrency = $virtualAcc_respone["accountingCurrency"]; 
         $virtualAcc_id = $virtualAcc_respone["id"];
-        
+        $logged_userID = $request->user_id;
         $lastInsertID  = DB::table('virtual_account')->insertGetId([
-            'user_id' => 1,
+            'user_id' => $logged_userID,
             'currency' => $currency,
             'active' =>  $active,
             'account_balance' => $accountBalance,
@@ -201,7 +201,7 @@ class TatumCryptoWalletController extends Controller
         );
 
         $this->helper->one_time_message('success', "Virtual Account has been created successfully");
-        return redirect(Config::get('adminPrefix').'/virtual-accounts');
+        return redirect(Config::get('adminPrefix')."/users/wallets/$logged_userID");
         // $errorMsg = $this->helper->one_time_message('danger', 'Virtual Account Error: 401');
         // return back()->with($errorMsg);
     }

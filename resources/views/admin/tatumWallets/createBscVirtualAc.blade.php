@@ -18,6 +18,7 @@
                     <form action="{{ url(\Config::get('adminPrefix').'/crypto-wallets/create-bsc') }}" class="form-horizontal" id="user_form" method="POST">
                         @csrf
                         @method('POST')
+                       
                             <div class="box-body">
                                 <div class="form-group">
                                     <label class="col-sm-3 control-label require" for="first_name">

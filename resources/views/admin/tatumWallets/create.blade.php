@@ -35,6 +35,22 @@
 
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label require" for="first_name">
+                                        Wallet Detail
+                                    </label>
+                                    <div class="col-sm-6">
+                                        <input class="form-control" placeholder="Detail" name="wallet_number" type="text" id="first_name" value="{{ old('wallet_number') }}">
+                                        </input>
+
+                                        @if($errors->has('xApiKey'))
+                                            <span class="error">
+                                                {{ $errors->first('xApiKey') }}
+                                            </span>
+                                        @endif
+
+                                    </div>
+                                </div>
 
                               
                                 <div class="box-footer">
