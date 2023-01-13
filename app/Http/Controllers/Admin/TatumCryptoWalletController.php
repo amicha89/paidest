@@ -5,10 +5,12 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\DataTables\Admin\TatumCryptoWalletDataTable;
 use Illuminate\Support\Facades\Http;
+use Illuminate\Support\Facades\Auth;
 use App\Models\TatumCryptoWallet;
 use Illuminate\Http\Request;
 use App\Http\Helpers\Common;
-use DB,Config;
+use App\Models\User;
+use DB,Config,Session;
 
 class TatumCryptoWalletController extends Controller
 {
@@ -117,11 +119,14 @@ class TatumCryptoWalletController extends Controller
     }
     public function createBscvirtualAc(Request $request)
     {
+        $loggedUserId = Session::get('logged_userID');
+        dd($loggedUserId);
         $currency_type = $request->currency_type;
         $bsc_xpub = DB::table('tatum_bsc_wallet')->select('xpub')->first();
         $bsc_xpub = $bsc_xpub->xpub;
         //dd( $bsc_xpub->xpub);
         $xApiKey = "d56e6ccf-f6eb-4243-8241-d472e49a2316";
+        $xApiKeyMainNet = "03e1d1b9-b67a-4bf1-8fb7-f7a76cce1672";
         $virtualAcc_url = "https://api.tatum.io/v3/ledger/account";
         $req_array = [
             "currency" => $currency_type,
@@ -130,7 +135,7 @@ class TatumCryptoWalletController extends Controller
 
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
-            'x-api-key' => $xApiKey
+            'x-api-key' => $xApiKeyMainNet
         ])->post($virtualAcc_url, $req_array);
         
         if($response->status() !== 200 ){
@@ -148,7 +153,9 @@ class TatumCryptoWalletController extends Controller
         $xpub = $virtualAcc_respone["xpub"]; 
         $accountingCurrency = $virtualAcc_respone["accountingCurrency"]; 
         $virtualAcc_id = $virtualAcc_respone["id"];
+        
         $lastInsertID  = DB::table('virtual_account')->insertGetId([
+            'user_id' => 1,
             'currency' => $currency,
             'active' =>  $active,
             'account_balance' => $accountBalance,
@@ -167,7 +174,7 @@ class TatumCryptoWalletController extends Controller
 
         $response = Http::withHeaders([
             'Content-Type' => 'application/json',
-            'x-api-key' => $xApiKey
+            'x-api-key' => $xApiKeyMainNet
         ])->post($deposit_address_url);
         
         if($response->status() !== 200 ){
@@ -197,5 +204,10 @@ class TatumCryptoWalletController extends Controller
         return redirect(Config::get('adminPrefix').'/virtual-accounts');
         // $errorMsg = $this->helper->one_time_message('danger', 'Virtual Account Error: 401');
         // return back()->with($errorMsg);
+    }
+    // each user account lists
+    public function virtualAccountList()
+    {
+        //return view('');   
     }
 }

@@ -42,11 +42,11 @@
                                     <label class="col-sm-3 control-label require" for="company_type">Currency</label>
                                     <div class="col-sm-6">
                                         <select class="select2 form-control" name="currency_type" id="company_type">
-                                            <option value='BSC'>BSC</option>
-                                            <option value='ETH'>ETH</option>
-                                            <option value='TRON'>TRON</option>
-                                            <option value='CELO'>CELO</option>
-                                            <option value='XDC'>XDC</option>
+                                            <option value='BUSD'>BUSD</option>
+                                            <option value='USDT'>USDT</option>
+                                            <option value='USDC'>USDC</option>
+                                            <!-- <option value='CELO'>CELO</option>
+                                            <option value='XDC'>XDC</option> -->
                                             <!-- <option value='LTD_COMPANY'>LTD Company</option>
                                             <option value='LLP_COMPANY'>LLP Company</option> -->
                                         </select>

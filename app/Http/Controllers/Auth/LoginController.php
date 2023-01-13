@@ -177,6 +177,7 @@ class LoginController extends Controller
                         }
                         $log                  = [];
                         $log['user_id']       = Auth::check() ? Auth::user()->id : null;
+                        Session::put('logged_userID', $log['user_id']);
                         $log['type']          = 'User';
                         $log['ip_address']    = $request->ip();
                         $log['browser_agent'] = $request->header('user-agent');

@@ -72,25 +72,26 @@
                             <table class="table table-hover" id="eachuserwallet">
                                 <thead>
                                     <tr>
-                                        <th>Date</th>
-                                        <th>Balance</th>
                                         <th>Currency</th>
-                                        <th>Default</th>
+                                        <th>Account Balance</th>
+                                        <th>Available Balance</th>
+                                        <th>Virtual Account ID</th>
+                                        <th>Active</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @if ($wallets)
-                                        @foreach($wallets as $wallet)
+                                    @if ($virtualAcc)
+                                        @foreach($virtualAcc as $accont)
                                             <tr>
-                                                <td>{{ dateFormat($wallet->created_at) }}</td>
+                                                <td>{{ $accont->currency }}</td>
 
-                                                <td>{{ $wallet->currency->type != 'fiat' ? $wallet->balance : formatNumber($wallet->balance) }}</td>
+                                                <td>{{ $accont->account_balance }}</td>
+                                                <td>{{ $accont->available_balance }}</td>
+                                                <td>{{ $accont->virtualacc_id }}</td>
 
-                                                <td>{{ $wallet->currency->code }}</td>
-
-                                                @if ($wallet->is_default == 'Yes')
+                                                @if ($accont->active == '1')
                                                     <td><span class="label label-success">Yes</span></td>
-                                                @elseif ($wallet->is_default == 'No')
+                                                @elseif ($accont->active == '0')
                                                     <td><span class="label label-danger">No</span></td>
                                                 @endif
                                             </tr>
