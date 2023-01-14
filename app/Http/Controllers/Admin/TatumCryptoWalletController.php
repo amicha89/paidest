@@ -36,6 +36,7 @@ class TatumCryptoWalletController extends Controller
     public  function bscWallet(Request $request)
     {
         $xApiKey = $request->xApiKey;
+        $walletDetails = $request->wallet_number;
         $bscWallet = 'https://api.tatum.io/v3/bsc/wallet';
 
         $response = Http::withHeaders([
@@ -51,7 +52,7 @@ class TatumCryptoWalletController extends Controller
                         'xpub' => $bsc_xpub,
                         'mnemonic' => $bsc_menmonic
                 ]);
-            // generate BSC account address of wallet / public address for users to receive funds
+            // generate BSC account address of wallet / public address for users to receive funds /   'wallet_details' => $walletDetails
             $xpub = $bsc_xpub;
             $index_for_public = $lastInsertedId;
             $bscPublicKeyURL = 'https://api.tatum.io/v3/bsc/address/'.$xpub.'/'.$index_for_public;
@@ -116,21 +117,25 @@ class TatumCryptoWalletController extends Controller
     //bsc virtual account
     public function bscvirtualAccounts($id)
     {
-        return view('admin.tatumWallets.bscVirtualAcount')->with('user_id', $id);
+        $allWallets = DB::table('tatum_bsc_wallet')->select('xpub','public_key')->whereNotNull('public_key')->get();
+        $user_id = $id;
+        return view('admin.tatumWallets.bscVirtualAcount', compact('user_id','allWallets'));
     }
     public function createBscvirtualAc(Request $request)
     {
         //dd($request->all());
         $currency_type = $request->currency_type;
-        $bsc_xpub = DB::table('tatum_bsc_wallet')->select('xpub')->first();
-        $bsc_xpub = $bsc_xpub->xpub;
-        //dd( $bsc_xpub->xpub);
+        $wallet_xpub = $request->wallet_xpub;
+        $bsc_xpub = DB::table('tatum_bsc_wallet')->select('public_key')->where('xpub', $wallet_xpub)->first(); //xpub is as a public key
+        //dd($bsc_xpub->public_key);
+        // Tatum.io testnet key
         $xApiKey = "d56e6ccf-f6eb-4243-8241-d472e49a2316";
+        // Tatum.io main net key
         $xApiKeyMainNet = "03e1d1b9-b67a-4bf1-8fb7-f7a76cce1672";
         $virtualAcc_url = "https://api.tatum.io/v3/ledger/account";
         $req_array = [
             "currency" => $currency_type,
-            "xpub" => $bsc_xpub
+            "xpub" => $wallet_xpub
         ];
 
         $response = Http::withHeaders([
@@ -161,7 +166,7 @@ class TatumCryptoWalletController extends Controller
             'account_balance' => $accountBalance,
             'available_balance' => $availableBalance,
             'frozen' => $frozen,
-            'xpub' => $xpub,
+            'xpub' => $bsc_xpub->public_key,
             'accounting_currency' => $accountingCurrency,
             'virtualacc_id' => $virtualAcc_id,
         ]);

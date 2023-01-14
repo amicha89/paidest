@@ -76,6 +76,7 @@
                                         <th>Account Balance</th>
                                         <th>Available Balance</th>
                                         <th>Virtual Account ID</th>
+                                        <th>Wallet Public Key</th>
                                         <th>Active</th>
                                     </tr>
                                 </thead>
@@ -88,6 +89,8 @@
                                                 <td>{{ $accont->account_balance }}</td>
                                                 <td>{{ $accont->available_balance }}</td>
                                                 <td>{{ $accont->virtualacc_id }}</td>
+                                                
+                                                <td>{{substr($accont->xpub, 0, 20)}}</td>
 
                                                 @if ($accont->active == '1')
                                                     <td><span class="label label-success">Yes</span></td>

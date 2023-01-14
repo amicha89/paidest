@@ -30,10 +30,14 @@
                                     </div>
                                 </div>
                                 <div class="form-group">
-                                    <label class="col-sm-3 control-label require" for="company_type">Wallet</label>
+                                    <label class="col-sm-3 control-label require" for="company_type">Wallet Public Key</label>
                                     <div class="col-sm-6">
-                                        <select class="select2 form-control" name="company_type" id="company_type">
-                                            <option value='bscWallet'>Binance Smart Chain</option>
+                                        <select class="select2 form-control" name="wallet_xpub" id="company_type">
+                                            <?php
+                                                foreach ($allWallets as $wallet) {
+                                            ?>
+                                            <option value="{{ $wallet->xpub}}">{{ $wallet->public_key}}</option>
+                                            <?php } ?>
                                            <!--  <option value='LTD_COMPANY'>LTD Company</option>
                                             <option value='LLP_COMPANY'>LLP Company</option> -->
                                         </select>
@@ -55,7 +59,7 @@
                                 </div>
 
                                 <div class="box-footer">
-                                    <!-- <a class="btn btn-theme-danger pull-left" href="{{ url(\Config::get('adminPrefix').'/app-registrations') }}" id="users_cancel">Cancel</a> -->
+                                    <a class="btn btn-theme-danger pull-left" href="{{ url(\Config::get('adminPrefix')."/users/wallets/$user_id") }}" id="users_cancel">Cancel</a>
                                     <button type="submit" class="btn btn-theme pull-right" id="app_create"><i class="fa fa-spinner fa-spin" style="display: none;"></i> <span id="app_create_text">Create</span></button>
                                 </div>
                             </div>

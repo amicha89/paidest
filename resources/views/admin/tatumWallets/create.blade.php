@@ -35,7 +35,7 @@
 
                                     </div>
                                 </div>
-                                <div class="form-group">
+                                <!-- <div class="form-group">
                                     <label class="col-sm-3 control-label require" for="first_name">
                                         Wallet Detail
                                     </label>
@@ -50,7 +50,7 @@
                                         @endif
 
                                     </div>
-                                </div>
+                                </div> -->
 
                               
                                 <div class="box-footer">

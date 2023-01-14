@@ -851,13 +851,14 @@ class UserController extends Controller
     //     $data['users']   = User::find($id, ['id', 'first_name', 'last_name']);
     //     return view('admin.users.eachuserwallet', $data);
     // }
+
     // tatum.io ikfcode
     public function eachUserWallet($id)
     {
         $data['menu']     = 'users';
         $data['sub_menu'] = 'users_list';
 
-        $data['virtualAcc'] = DB::table('virtual_account')->select('currency','active','account_balance','available_balance','virtualacc_id','deposit_address')->where(['user_id' => $id])->orderBy('id', 'desc')->get();
+        $data['virtualAcc'] = DB::table('virtual_account')->select('currency','active','account_balance','available_balance','virtualacc_id','deposit_address','xpub')->where(['user_id' => $id])->orderBy('id', 'desc')->get();
         //dd($data['virtualAcc']);
         $data['users']   = User::find($id, ['id', 'first_name', 'last_name']);
         return view('admin.users.eachuserwallet', $data);
