@@ -181,7 +181,10 @@ class CustomerController extends Controller
     {
         $data['menu']  = 'dashboard';
         $data['title'] = 'Dashboard';
-
+        
+        $loggedUserID = Auth::user()->id;
+       
+        $data['virtualAccounts'] = DB::table('virtual_account')->select('currency','active','account_balance','available_balance','virtualacc_id','deposit_address','xpub')->where(['user_id' => $loggedUserID])->orderBy('id', 'desc')->get();
         $transaction          = new Transaction();
         $data['transactions'] = $transaction->dashboardTransactionList();
         $data['lastTransaction'] = Transaction::with(['transaction_type:id,name','currency:id,code,type'])->where('user_id', auth()->user()->id)->latest()->first();
