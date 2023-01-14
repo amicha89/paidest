@@ -91,6 +91,7 @@ Route::group(['prefix' => Config::get('adminPrefix'), 'namespace' => 'Admin', 'm
     Route::post('crypto-wallets/create-bsc','TatumCryptoWalletController@bscWallet');
     Route::get('virtual-accounts/{id}','TatumCryptoWalletController@bscvirtualAccounts');
     Route::post('virtual-accounts/create-virtual-account','TatumCryptoWalletController@createBscvirtualAc');
+    Route::get('virtual-accounts','TatumCryptoWalletController@allVirtualAccounts'); //list all virtual Accounts
     //Route::get('virtual-accounts/accounts-list','TatumCryptoWalletController@virtualAccountList');
 
     //Api Credential

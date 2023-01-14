@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\DataTables\Admin\TatumCryptoWalletDataTable;
+use App\DataTables\Admin\VirtualAccountsDataTable;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Auth;
 use App\Models\TatumCryptoWallet;
@@ -210,9 +211,9 @@ class TatumCryptoWalletController extends Controller
         // $errorMsg = $this->helper->one_time_message('danger', 'Virtual Account Error: 401');
         // return back()->with($errorMsg);
     }
-    // each user account lists
-    public function virtualAccountList()
+    // all virtual Accounts list
+    public function allVirtualAccounts(VirtualAccountsDataTable $dataTable)
     {
-        //return view('');   
+        return $dataTable->render('admin.tatumWallets.virtualAccountslist');
     }
 }

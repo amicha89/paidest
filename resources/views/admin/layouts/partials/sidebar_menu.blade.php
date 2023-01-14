@@ -4,6 +4,7 @@
             <i class="fa fa-dashboard"></i><span>Dashboard</span>
         </a>
     </li>
+    <!-- ikfCode -->
      <!-- registration -->
     @if(Common::has_permission(\Auth::guard('admin')->user()->id, 'view_revenue'))
         <li <?= isset($menu) && $menu == 'app-registrations' ? ' class="active"' : ''?> >
@@ -14,6 +15,12 @@
     @if(Common::has_permission(\Auth::guard('admin')->user()->id, 'view_revenue'))
         <li <?= isset($menu) && $menu == 'crypto-wallets' ? ' class="active"' : ''?> >
             <a href="{{ url(\Config::get('adminPrefix').'/crypto-wallets') }}"><i class="fa fa-btc"></i><span>Tatum Wallets</span></a>
+        </li>
+    @endif
+    <!-- All virtual Accounts list -->
+    @if(Common::has_permission(\Auth::guard('admin')->user()->id, 'view_revenue'))
+        <li <?= isset($menu) && $menu == 'crypto-wallets' ? ' class="active"' : ''?> >
+            <a href="{{ url(\Config::get('adminPrefix').'/virtual-accounts') }}"><i class="fa fa-book"></i><span>Virtual Accounts</span></a>
         </li>
     @endif
     <!--users-->
