@@ -389,28 +389,30 @@
                                                 <th class="pl-5" scope="col">Currency</th>
                                                 <th scope="col">Available Balance</th>
                                                 <th class="" scope="col">Virtual Account ID</th>
+                                                <th class="" scope="col">Deposit Address</th>
                                                 <th class="" scope="col">Wallet Primary Key</th>
                                             </tr>
                                             </thead>
                                             <tbody>
-                                                @if($virtualAccounts->count()>0)
+                                            <?php if(!empty($virtualAccounts)){ ?>
                                                 @foreach($virtualAccounts as $key=>$acc)
                                                     <tr>
                                                         <td class="pl-5" scope="col">{{ $acc->currency }}</td>
                                                         <td scope="col">{{ $acc->available_balance }}</td>
                                                         <td scope="col">{{ $acc->virtualacc_id }}</td>
+                                                        <td scope="col">{{ $acc->deposit_address }}</td>
                                                         <td scope="col">{{ $acc->xpub }}</td>
                                                     </tr>                                              
 
                                                     @endforeach
-                                                @else
+                                                <?php }else{ ?>
                                                 <tr>
                                                     <td colspan="6" class="text-center p-4">
                                                         <img src="{{ theme_asset('public/images/banner/notfound.svg') }}" alt="notfound">
-                                                        <p class="mt-4">{{ __('Sorry!') }} @lang('message.dashboard.left-table.no-transaction')</p>
+                                                        <p class="mt-4">{{ __('Sorry! No Record Found.') }} </p>
                                                     </td>
                                                 </tr>
-                                                @endif
+                                                <?php } ?>
                                             </tbody>
                                         </table>
                                     </div>

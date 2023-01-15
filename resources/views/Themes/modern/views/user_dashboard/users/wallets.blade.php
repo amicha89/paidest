@@ -118,6 +118,57 @@
                 </div>
             </div>
             <!--Crypto list payment section end -->
+            <!-- Virtual Accounts -->
+            <div class="row mt-30 mb-30 flex-column-reverse flex-md-row">
+                <div class="col-lg-12 mt-4">
+                    <!-- Sub title start -->
+                    <div>
+                        <h3 class="sub-title">{{ __('Virtual Accounts') }}</h3>
+
+                        <div class="row">
+                            <div class="col-md-12">
+                                <div class="bg-secondary mt-3 shadow">
+                                    <div class="table-responsive">
+                                        <table class="table">
+                                            <thead>
+                                            <tr>
+                                                <th class="pl-5" scope="col">Currency</th>
+                                                <th scope="col">Available Balance</th>
+                                                <th class="" scope="col">Virtual Account ID</th>
+                                                <th class="" scope="col">Deposit Address</th>
+                                                <th class="" scope="col">Wallet Primary Key</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody>
+                                                <?php if(!empty($virtualAccounts)){ ?>
+                                                @foreach($virtualAccounts as $key=>$acc)
+                                                    <tr>
+                                                        <td class="pl-5" scope="col">{{ $acc->currency }}</td>
+                                                        <td scope="col">{{ $acc->available_balance }}</td>
+                                                        <td scope="col">{{ $acc->virtualacc_id }}</td>
+                                                        <td scope="col">{{ $acc->deposit_address }}</td>
+                                                        <td scope="col">{{ $acc->xpub }}</td>
+                                                    </tr>                                              
+
+                                                    @endforeach
+                                                <?php }else{ ?>
+                                                <tr>
+                                                    <td colspan="6" class="text-center p-4">
+                                                        <img src="{{ theme_asset('public/images/banner/notfound.svg') }}" alt="notfound">
+                                                        <p class="mt-4">{{ __('Sorry! No Record Found') }}</p>
+                                                    </td>
+                                                </tr>
+                                                <?php } ?>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- end Virtual Accounts -->
         </div>
     </div>
 </section>

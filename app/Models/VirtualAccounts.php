@@ -9,10 +9,5 @@ class VirtualAccounts extends Model
 {
     use HasFactory;
     protected $table = 'virtual_account';
-    protected $fillable = [
-        'id',
-        'user_id'
-    ];
-
-
+    protected $guarded = [];
 }

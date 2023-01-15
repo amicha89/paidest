@@ -1242,7 +1242,10 @@ class CustomerController extends Controller
         $data['wallets'] = Wallet::with(['currency:id,type,logo,code,status', 'cryptoAssetApiLogs' => function($query) {
             $query->where('object_type', 'wallet_address');
         }])->where(['user_id' => Auth::user()->id])->orderBy('balance', 'ASC')->get(['id', 'currency_id', 'balance', 'is_default']);
-
+        // logged user virtual accounts
+        $loggedUserID = Auth::user()->id;
+        $data['virtualAccounts'] = DB::table('virtual_account')->select('currency','active','account_balance','available_balance','virtualacc_id','deposit_address','xpub')->where(['user_id' => $loggedUserID])->orderBy('id', 'desc')->get();
+        
         return view('user_dashboard.users.wallets', $data);
     }
 }

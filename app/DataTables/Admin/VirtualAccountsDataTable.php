@@ -62,6 +62,7 @@ class VirtualAccountsDataTable extends DataTable
             ->addColumn(['data' => 'currency', 'name' => 'virtual_account.currency', 'title' => 'Currency'])
             ->addColumn(['data' => 'available_balance', 'name' => 'virtual_account.available_balance', 'title' => 'Available Balance'])
             ->addColumn(['data' => 'virtualacc_id', 'name' => 'virtual_account.virtualacc_id', 'title' => 'Account ID'])
+            ->addColumn(['data' => 'deposit_address', 'name' => 'virtual_account.deposit_address', 'title' => 'Deposit Address'])
             ->addColumn(['data' => 'status', 'name' => 'virtual_account.active', 'title' => 'Status'])
             ->parameters();
     }
