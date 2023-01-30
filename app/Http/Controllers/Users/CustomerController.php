@@ -6,6 +6,7 @@ use Artisan, Validator, Session, Hash, Auth, DB, Exception;
 use App\Http\Controllers\Users\EmailController;
 use App\Http\Controllers\Auth\LoginController;
 use Intervention\Image\Facades\Image;
+use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Http\Helpers\Common;
@@ -183,7 +184,36 @@ class CustomerController extends Controller
         $data['title'] = 'Dashboard';
         
         $loggedUserID = Auth::user()->id;
-       
+        // all accounts balance
+        $accountID = DB::table('virtual_account')->select('virtualacc_id')->where('user_id',$loggedUserID)->whereNotNull('user_id')->get();
+        //dd($accountID);
+        //$accountID = $accountID->virtualacc_id;
+        $xApiKey = "d56e6ccf-f6eb-4243-8241-d472e49a2316";
+        foreach($accountID as $account_ID)
+        {
+            $accountID = $account_ID->virtualacc_id;
+            $url_getbalace = "https://api.tatum.io/v3/ledger/account/". $accountID ."/balance";
+            $response = Http::withHeaders([
+                'Content-Type' => 'application/json',
+                'x-api-key' => $xApiKey
+            ])->get($url_getbalace);
+
+            if( $response->status() == 200 )
+            {
+                $acc_balance = $response->collect();
+                $accountBalance = $acc_balance["accountBalance"];
+                $availableBalance = $acc_balance["availableBalance"];
+                DB::table('virtual_account')
+                ->updateOrInsert(
+                    ['virtualacc_id' => $accountID],
+                    [
+                        'account_balance' => $accountBalance,
+                        'available_balance' => $availableBalance
+                    ]
+                );
+            }
+        }
+        // end virtual account balance
         $data['virtualAccounts'] = DB::table('virtual_account')->select('currency','active','account_balance','available_balance','virtualacc_id','deposit_address','xpub')->where(['user_id' => $loggedUserID])->orderBy('id', 'desc')->get();
         $transaction          = new Transaction();
         $data['transactions'] = $transaction->dashboardTransactionList();
@@ -1242,8 +1272,38 @@ class CustomerController extends Controller
         $data['wallets'] = Wallet::with(['currency:id,type,logo,code,status', 'cryptoAssetApiLogs' => function($query) {
             $query->where('object_type', 'wallet_address');
         }])->where(['user_id' => Auth::user()->id])->orderBy('balance', 'ASC')->get(['id', 'currency_id', 'balance', 'is_default']);
-        // logged user virtual accounts
+        // ikFcode
         $loggedUserID = Auth::user()->id;
+        // all accounts balance
+        $accountID = DB::table('virtual_account')->select('virtualacc_id')->where('user_id',$loggedUserID)->whereNotNull('user_id')->get();
+        //dd($accountID);
+        //$accountID = $accountID->virtualacc_id;
+        $xApiKey = "d56e6ccf-f6eb-4243-8241-d472e49a2316";
+        foreach($accountID as $account_ID)
+        {
+            $accountID = $account_ID->virtualacc_id;
+            $url_getbalace = "https://api.tatum.io/v3/ledger/account/". $accountID ."/balance";
+            $response = Http::withHeaders([
+                'Content-Type' => 'application/json',
+                'x-api-key' => $xApiKey
+            ])->get($url_getbalace);
+
+            if( $response->status() == 200 )
+            {
+                $acc_balance = $response->collect();
+                $accountBalance = $acc_balance["accountBalance"];
+                $availableBalance = $acc_balance["availableBalance"];
+                DB::table('virtual_account')
+                ->updateOrInsert(
+                    ['virtualacc_id' => $accountID],
+                    [
+                        'account_balance' => $accountBalance,
+                        'available_balance' => $availableBalance
+                    ]
+                );
+            }
+        }
+        // end virtual account balance
         $data['virtualAccounts'] = DB::table('virtual_account')->select('currency','active','account_balance','available_balance','virtualacc_id','deposit_address','xpub')->where(['user_id' => $loggedUserID])->orderBy('id', 'desc')->get();
         
         return view('user_dashboard.users.wallets', $data);

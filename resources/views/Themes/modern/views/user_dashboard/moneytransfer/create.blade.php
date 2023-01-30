@@ -49,11 +49,16 @@
                                         <div class="row">
                                             <div class="col-md-7">
                                                 <div class="form-group">
-                                                    <label for="exampleInputPassword1">@lang('message.dashboard.send-request.common.currency')</label>
+                                                    <!-- @lang('message.dashboard.send-request.common.currency') -->
+                                                    <label for="exampleInputPassword1">Currency</label>
                                                     <select class="form-control wallet" name="wallet" id="wallet">
-                                                        @foreach($walletList as $result)
+                                                        <option value="USDT">USDT</option>
+                                                        <option value="USDC">USDC</option>
+                                                        <option value="BUSD">BUSD</option>
+                                                        <option value="BSC">BSC</option>
+                                                        <!-- @foreach($walletList as $result)
                                                             <option data-type="{{ optional($result->active_currency)->type }}" value="{{ $result->id }}" {{ $result->is_default == 'Yes' ? 'selected="selected"' : '' }}>{{ optional($result->active_currency)->code }}</option>
-                                                        @endforeach
+                                                        @endforeach -->
                                                     </select>
                                                     <small id="walletlHelp" class="form-text text-muted">
                                                         @lang('message.dashboard.deposit.fee') (<span class="pFees">0</span>%+<span class="fFees">0</span>)

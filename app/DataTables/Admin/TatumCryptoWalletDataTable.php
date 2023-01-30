@@ -41,6 +41,7 @@ class TatumCryptoWalletDataTable extends DataTable
     {
        return $this->builder()
             ->addColumn(['data' => 'id', 'name' => 'tatum_bsc_wallet.id', 'title' => 'ID'])
+            ->addColumn(['data' => 'blockchain_type', 'name' => 'tatum_bsc_wallet.blockchain_type', 'title' => 'Blockchain'])
             ->addColumn(['data' => 'public_key', 'name' => 'tatum_bsc_wallet.public_key', 'title' => 'Public Key'])
             ->addColumn(['data' => 'private_key', 'name' => 'tatum_bsc_wallet.private_key', 'title' => 'Private Key'])
             ->addColumn(['data' => 'xpub', 'name' => 'tatum_bsc_wallet.xpub', 'title' => 'Xpub'])

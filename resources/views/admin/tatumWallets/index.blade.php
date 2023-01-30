@@ -18,7 +18,7 @@
                 <div>
                   <!-- {{url(\Config::get('adminPrefix').'/users/create')}} -->
                     @if(Common::has_permission(\Auth::guard('admin')->user()->id, 'add_user'))
-                        <a href="{{url(\Config::get('adminPrefix').'/crypto-wallets/create')}} " class="btn btn-theme"><span class="fa fa-plus"> &nbsp;</span>Create BSC Wallet</a>
+                        <a href="{{url(\Config::get('adminPrefix').'/crypto-wallets/create')}} " class="btn btn-theme"><span class="fa fa-plus"> &nbsp;</span>Create Wallet</a>
                     @endif
                 </div>
             </div>

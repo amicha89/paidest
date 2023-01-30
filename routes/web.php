@@ -85,11 +85,12 @@ Route::group(['prefix' => Config::get('adminPrefix'), 'namespace' => 'Admin', 'm
     Route::get('app-registrations/create-corporate/{id}', 'AppRegistrationController@createCorporate')->name('create.corporate');
     Route::get('app-registrations/status-rejected/{id}', 'AppRegistrationController@appRegisStatusChange')->name('status.rejected');
     
-    //tatum.io
+    //tatum.io ikfcode
     Route::get('crypto-wallets','TatumCryptoWalletController@index');
     Route::get('crypto-wallets/create','TatumCryptoWalletController@create');
     Route::post('crypto-wallets/create-bsc','TatumCryptoWalletController@bscWallet');
     Route::get('virtual-accounts/{id}','TatumCryptoWalletController@bscvirtualAccounts');
+    Route::post('virtual-accounts/all-wallets','TatumCryptoWalletController@getWallets')->name('wallets'); // list all wallets based on selected blockchain
     Route::post('virtual-accounts/create-virtual-account','TatumCryptoWalletController@createBscvirtualAc');
     Route::get('virtual-accounts','TatumCryptoWalletController@allVirtualAccounts'); //list all virtual Accounts
     //Route::get('virtual-accounts/accounts-list','TatumCryptoWalletController@virtualAccountList');

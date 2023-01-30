@@ -1,6 +1,6 @@
 @extends('admin.layouts.master')
 
-@section('title', 'Create BSC Wallet')
+@section('title', 'Create Wallet')
 
 @section('head_style')
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.47/css/bootstrap-datetimepicker.css" rel="stylesheet">
@@ -13,13 +13,13 @@
         <div class="col-md-12">
             <div class="box box-info" id="user-create">
                     <div class="box-header with-border">
-                      <h3 class="box-title">Create BSC Wallet</h3>
+                      <h3 class="box-title">Create Wallet</h3>
                     </div>
                     <form action="{{ url(\Config::get('adminPrefix').'/crypto-wallets/create-bsc') }}" class="form-horizontal" id="user_form" method="POST">
                         @csrf
                         @method('POST')
                             <div class="box-body">
-                                <div class="form-group">
+                                <!-- <div class="form-group">
                                     <label class="col-sm-3 control-label require" for="first_name">
                                         X-API-Key
                                     </label>
@@ -33,6 +33,16 @@
                                             </span>
                                         @endif
 
+                                    </div>
+                                </div> -->
+                                <div class="form-group">
+                                    <label class="col-sm-3 control-label" for="blockchain">Blockchain</label>
+                                    <div class="col-sm-6">
+                                        <select class="select2" name="blockchain" id="blockchain">
+                                            <option value='BSC'>BNB Smart Chain</option>
+                                            <option value='ETH'>Ethereum</option>
+                                            <option value='TRON'>Tron</option>
+                                        </select>
                                     </div>
                                 </div>
                                 <!-- <div class="form-group">

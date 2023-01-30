@@ -196,7 +196,7 @@
         </li>
     @endif
 
-    <p class="pl-4 configuration">{{ __('Configurations') }}</p>
+    <!-- <p class="pl-4 configuration">{{ __('Configurations') }}</p> -->
 
      <!-- Currencies & Fees -->
      @if(Common::has_permission(\Auth::guard('admin')->user()->id, 'view_currency'))
@@ -207,12 +207,12 @@
 
     <!-- Crypto Providers -->
     @if(Common::has_permission(\Auth::guard('admin')->user()->id, 'view_crypto_provider'))
-    <li class="{{ isset($menu) && $menu == 'crypto_providers' ? 'active treeview' : 'treeview' }}">
+    <!-- <li class="{{ isset($menu) && $menu == 'crypto_providers' ? 'active treeview' : 'treeview' }}">
         <a href="{{ route('admin.crypto_providers.list', 'BlockIo') }}">
             <i class="fa fa-btc"></i><span>{{ __('Crypto Providers') }}</span>
             <span class="pull-right-container"></span>
         </a>
-    </li>
+    </li> -->
     @endif
 
     <!-- Templates -->
@@ -253,9 +253,9 @@
     </li>
 
     @if(Common::has_permission(\Auth::guard('admin')->user()->id, 'view_addon_manager'))
-    <li <?= isset($menu) && $menu == 'addon-manager' ? ' class="active"' : ''?> >
+    <!-- <li <?= isset($menu) && $menu == 'addon-manager' ? ' class="active"' : ''?> >
         <a href="{{ url(\Config::get('adminPrefix') . '/module-manager/addons') }}"><i class="fa fa-puzzle-piece"></i><span>{{ __('Addon Manager') }}</span></a>
-    </li>
+    </li> -->
     @endif
 
     <!-- Modules or Addons -->
